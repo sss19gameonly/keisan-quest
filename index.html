@@ -26,45 +26,67 @@
 @media (max-height:770px){.app{padding-top:calc(8px + env(safe-area-inset-top))}.top{margin-bottom:5px}.stagebar{margin-bottom:7px}.stages{margin-bottom:8px}.scene{height:205px}.character{bottom:16px;transform:scale(.9);transform-origin:bottom center}.battle-ui{margin-top:13px;padding:12px}.answer{height:58px}.math-q{font-size:33px}.math-sub{margin-bottom:9px}.assist{margin-top:8px}}
 @media(max-width:350px){.app{padding-left:11px;padding-right:11px}.logo{font-size:13px}.scene{height:197px}.hpbox{width:105px}.character{width:106px}.hero-char{left:4%}.enemy-char{right:2%}.title{font-size:33px}.math-q{font-size:32px}}
 @media (prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* v0.2: level selection, turns, retries, responsive feedback */
+.stage-select{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin:15px 0 10px}.stage-card{border:2px solid #dce6d6;border-radius:17px;background:#fffdf5;text-align:left;padding:14px 12px 13px;min-height:114px;box-shadow:0 4px 0 #d7e4d5}.stage-card:active{transform:translateY(2px);box-shadow:0 2px 0 #d7e4d5}.stage-card strong{display:block;font-weight:950;font-size:14px;line-height:1.4}.stage-card small{display:block;margin-top:8px;color:#637b75;font-weight:800;font-size:11px;line-height:1.5}.stage-card .emoji{font-size:25px;margin-bottom:5px;display:block}.stage-card.carry{border-color:#f3d4ab}.stage-card.borrow{border-color:#d8c9ee}.stage-card.nocarry{border-color:#c9dfed}.stage-section-title{font-size:14px;font-weight:950;text-align:center;margin:7px 0;color:#648174}
+.title-compact{font-size:32px}.intro-world{height:171px;margin:12px auto 8px}.intro-world .character{transform:scale(.84);bottom:6px}.intro-world .enemy-char{transform:scale(.76)}.start-hero{padding:2px 0}.start-hero .desc{margin:8px 0 7px}.start-hero .kicker{margin:1px 0 5px}.intro-world .intro-badge{font-size:11px}
+.turn-strip{display:flex;justify-content:center;align-items:center;gap:7px;margin:8px 0 2px;min-height:25px;font-size:12px;font-weight:950}.turn-tag{padding:5px 12px;border-radius:20px;color:#fff;background:#249b80;white-space:nowrap}.turn-tag.foe{background:#df866c}.turn-tag.potion{background:#5499c9}.turn-tag.wait{background:#a7ae9e}.try-mark{font-size:11px;font-weight:850;color:#7e8b82}
+.battle-ui{margin-top:10px}.math-q{font-size:clamp(24px,8vw,35px);letter-spacing:0;white-space:normal;line-height:1.3;min-height:46px}.math-sub{margin-bottom:9px}.answer{height:60px}.status{min-height:34px;margin:9px 0 0}.hint-panel{margin-top:7px}.hint-copy{font-size:12px}.hint-title{margin-bottom:5px}.assist-note{flex:1}.battle-ui .announce{font-size:12px;color:#b06553}.scene .effect.hero-damage{left:13%;right:auto;color:#de6a5a}.scene .effect.guard{left:13%;right:auto;color:#298fb4}
+.gameover{padding-top:25px}.gameover .medal{font-size:70px}.gameover .clear-title{color:#a66957}
+@media(max-width:350px){.stage-select{gap:7px}.stage-card{padding:10px;min-height:110px}.stage-card strong{font-size:12px}.intro-world{height:145px}.math-q{font-size:24px}.stage-name{font-size:14px}}
+@media(max-height:750px){.scene{height:185px}.character{bottom:12px}.battle-ui{padding:10px}.answer{height:54px}.turn-strip{margin:4px 0 2px}.math-q{min-height:38px}.intro-world{height:145px}}
 </style>
 </head>
+
 <body><main class="app" id="app">
 <header class="top"><div class="logo"><span class="logo-icon" aria-hidden="true">⚔</span>けいさんクエスト</div><div class="settings"><button class="small-btn" id="sound" aria-pressed="false">♪ おと OFF</button></div></header>
 <section class="page" id="titleScreen">
- <div class="start-hero"><p class="kicker">けいさんで すすむ ぼうけん！</p><h1 class="title">はじまりの<br><b>もりの ぼうけん</b></h1><p class="desc">たしざん・ひきざんで<br>モンスターに ちょうせんしよう！</p></div>
- <div class="intro-world"><div class="scene" id="introScene"><div class="sun"></div><div class="cloud"></div><div class="cloud two"></div><div class="hill back"></div><div class="hill"></div><div class="tree"></div><div class="tree t2"></div><div class="ground"></div><div class="character hero-char" id="introHero"></div><div class="character enemy-char" id="introEnemy"></div></div><div class="intro-badge">⚔️ ５たい たおして クリア！</div></div>
- <button class="main-button" id="start">ぼうけんに でかける！ →</button><p class="footnote">いそがなくて OK！ ・ まちがえても だいじょうぶ<br>おとを つけると こうかおんが なるよ</p>
+ <div class="start-hero"><p class="kicker">けいさんで すすむ ぼうけん！</p><h1 class="title title-compact">けいさん <b>クエスト</b></h1><p class="desc">じぶんに あった コースを えらぼう！</p></div>
+ <div class="intro-world"><div class="scene"><div class="sun"></div><div class="cloud"></div><div class="hill back"></div><div class="hill"></div><div class="tree"></div><div class="tree t2"></div><div class="ground"></div><div class="character hero-char" id="introHero"></div><div class="character enemy-char" id="introEnemy"></div></div><div class="intro-badge">⚔️ ５たい たおして クリア！</div></div>
+ <div class="stage-section-title">どの ぼうけんに する？</div><div class="stage-select" id="stageSelect" role="group" aria-label="コースを えらぶ"></div>
+ <p class="footnote">どの コースも さいしょから あそべるよ！<br>１かい まちがえたら ヒントが でるよ</p>
 </section>
 <section class="page" id="gameScreen" hidden>
  <div class="stagebar"><span class="stage-name" id="stageName">🌳 はじまりの もり</span><span class="stage-counter" id="stageCounter">1 / 5 たい</span></div>
  <div class="stages" id="stages" aria-label="5体のモンスター"></div>
  <div class="scene" id="scene" role="img" aria-label="ゆうしゃとモンスターが向かい合っている">
   <div class="sun"></div><div class="cloud"></div><div class="cloud two"></div><div class="hill back"></div><div class="hill"></div><div class="tree"></div><div class="tree t2"></div><div class="tree t3"></div><div class="flowers">✿ ✿</div><div class="ground"></div>
-  <div class="hud"><div class="hpbox"><div class="hp-heading"><span>🧑 ゆうしゃ</span><span id="heroHpNum">8 / 12</span></div><div class="health-track"><div class="health-fill" id="heroHpBar"></div></div></div><div class="hpbox enemy-hp" id="enemyHpBox"><div class="hp-heading"><span id="enemyName">ぷにスライム</span><span id="enemyHpNum">10 / 10</span></div><div class="health-track"><div class="health-fill" id="enemyHpBar"></div></div></div></div>
-  <div class="character hero-char" id="hero"></div><div class="character enemy-char" id="enemy"></div><div class="bubble" id="sceneBubble">けいさんで こうげき！</div>
+  <div class="hud"><div class="hpbox"><div class="hp-heading"><span>🧑 ゆうしゃ</span><span id="heroHpNum">10 / 12</span></div><div class="health-track"><div class="health-fill" id="heroHpBar"></div></div></div><div class="hpbox enemy-hp" id="enemyHpBox"><div class="hp-heading"><span id="enemyName">ぷにスライム</span><span id="enemyHpNum">9 / 9</span></div><div class="health-track"><div class="health-fill" id="enemyHpBar"></div></div></div></div>
+  <div class="character hero-char" id="hero"></div><div class="character enemy-char" id="enemy"></div><div class="bubble" id="sceneBubble">⚔️ こうげき！</div>
  </div>
+ <div class="turn-strip"><span class="turn-tag" id="turnTag">⚔️ あなたの ばん</span><span class="try-mark" id="tryMark">チャンス ２かい</span></div>
  <div class="battle-ui">
-  <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき！</span><span class="math-mini" id="mathMini">けんの つよさ 3</span></div>
-  <div class="math-q" id="mathQuestion" aria-live="polite">10 − 3 ＝ ？</div><p class="math-sub" id="mathSub">てきの HPは いくつ のこる？</p>
-  <div class="answer-grid" id="choices" role="group" aria-label="こたえを えらんでね"></div><p class="status" id="status" aria-live="polite">すうじを ひとつ えらんでね！</p>
-  <div class="hint-panel" id="hintPanel" hidden><div class="hint-title" id="hintTitle">まるを かぞえてみよう</div><div class="count-dots" id="hintDots"></div><p class="hint-copy" id="hintCopy"></p></div>
+  <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき</span><span class="math-mini" id="mathMini">せいかいで 3 ダメージ</span></div>
+  <div class="math-q" id="mathQuestion" aria-live="polite">5 ＋ 3 ＝ ？</div><p class="math-sub" id="mathSub">けいさんして こうげきしよう！</p>
+  <div class="answer-grid" id="choices" role="group" aria-label="こたえを えらんでね"></div><p class="status" id="status" role="status" aria-live="polite">すうじを ひとつ えらんでね！</p>
+  <div class="hint-panel" id="hintPanel" hidden><div class="hint-title" id="hintTitle">ヒント</div><div class="count-dots" id="hintDots"></div><p class="hint-copy" id="hintCopy"></p></div>
  </div>
- <div class="assist"><span class="assist-note">こたえは 3つから えらべるよ</span><button class="hint-btn" id="hint">💡 ヒントを みる</button></div>
+ <div class="assist"><span class="assist-note">１かいめの ミスは ペナルティなし<br>２かいめの ミスで こうどう しっぱい</span></div>
  <button class="secondary" id="quit">はじめに もどる</button>
 </section>
-<section class="page clear" id="clearScreen" hidden><p class="kicker">すべての モンスターに かった！</p><div class="medal" aria-hidden="true">🏆</div><h1 class="clear-title">ぼうけん クリア！</h1><p class="clear-copy">たしざんも ひきざんも<br>よく がんばったね！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num">５ たい！</div><div class="trophy-small" id="clearMaths">けいさん 15もん クリア！</div></div><button class="main-button" id="retry">もういっかい あそぶ ↻</button><button class="secondary" id="home">タイトルに もどる</button></section>
+<section class="page clear" id="clearScreen" hidden><p class="kicker">すべての モンスターに かった！</p><div class="medal" aria-hidden="true">🏆</div><h1 class="clear-title">ぼうけん クリア！</h1><p class="clear-copy" id="clearCopy">よく がんばったね！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num">５ たい！</div><div class="trophy-small" id="clearMaths"></div></div><button class="main-button" id="retry">おなじ コースで あそぶ ↻</button><button class="secondary" id="home">コースを えらぶ</button></section>
+<section class="page clear gameover" id="overScreen" hidden><p class="kicker">また ちょうせん できるよ！</p><div class="medal" aria-hidden="true">💫</div><h1 class="clear-title">ざんねん！</h1><p class="clear-copy" id="overCopy">ゆうしゃの HPが 0に なったよ。<br>つぎこそ クリアしよう！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num" id="overCount">0 たい</div><div class="trophy-small" id="overMaths"></div></div><button class="main-button" id="restart">もういちど ちょうせん！ ↻</button><button class="secondary" id="overHome">コースを えらぶ</button></section>
 </main>
 <script>
-/* けいさんクエスト v0.1 / No libraries, external files or accounts required. */
+
+/* けいさんクエスト v0.2 - single offline HTML; stages and turns */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
-const MONSTERS=[
- {name:'ぷにスライム',max:10,attacks:[3,4,3],kind:0,color:'#75d2b4'},
- {name:'きのこっこ',max:8,attacks:[4,4],kind:1,color:'#f6b772'},
- {name:'もこもこ',max:11,attacks:[5,6],kind:2,color:'#a8c3f4'},
- {name:'はっぱん',max:12,attacks:[5,5,2],kind:3,color:'#a9d980'},
- {name:'おおきな ぷに',max:14,attacks:[5,5,4],kind:4,color:'#e6a7cc'}
+const STAGES=[
+ {id:'basic',icon:'🌳',name:'はじまりの もり',label:'10まで',detail:'10いないの たしざん・ひきざん',kind:'basic'},
+ {id:'nocarry',icon:'💧',name:'みずべの みち',label:'20まで',detail:'くりあがり・くりさがり なし',kind:'nocarry'},
+ {id:'carry',icon:'☀️',name:'たいようの おか',label:'くりあがり',detail:'10を こえる たしざん',kind:'carry'},
+ {id:'borrow',icon:'🏰',name:'おしろへの みち',label:'くりさがり',detail:'10を またぐ ひきざん',kind:'borrow'}
 ];
+const MONSTERS=[
+ {name:'ぷにスライム',max:7,kind:0},
+ {name:'きのこっこ',max:8,kind:1},
+ {name:'もこもこ',max:9,kind:2},
+ {name:'はっぱん',max:9,kind:3},
+ {name:'おおきな ぷに',max:12,kind:4}
+];
+const HERO_MAX=12;
 const heroSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="137" rx="40" ry="7" fill="#467d6966"/><path d="M37 88 Q17 114 31 131 L86 131 Q96 111 82 87 Z" fill="#3f9c94" stroke="#2b7275" stroke-width="3"/><path d="M43 111 L38 135 M78 111 L84 135" stroke="#675f64" stroke-width="12" stroke-linecap="round"/><rect x="42" y="78" width="39" height="34" rx="9" fill="#e5b775" stroke="#b37b50" stroke-width="3"/><path d="M60 78 L60 111 M46 92 L75 92" stroke="#f8e9a2" stroke-width="5" stroke-linecap="round"/><rect x="43" y="31" width="37" height="54" rx="18" fill="#ffdab1" stroke="#a67868" stroke-width="3"/><path d="M39 52 Q36 21 61 20 Q83 21 84 52 Q73 40 57 42 Q46 48 39 52" fill="#6c554b"/><path d="M36 49 Q39 13 60 13 Q85 14 85 48" fill="#5277b5" stroke="#355989" stroke-width="3"/><rect x="33" y="44" width="54" height="8" rx="4" fill="#f2d38c"/><circle cx="54" cy="62" r="2.7" fill="#514b43"/><circle cx="70" cy="62" r="2.7" fill="#514b43"/><path d="M57 70 Q62 74 68 70" fill="none" stroke="#a96c68" stroke-width="2.5" stroke-linecap="round"/><path d="M29 91 L15 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M88 93 L99 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M101 101 L110 44" stroke="#9aaeb7" stroke-width="7" stroke-linecap="round"/><path d="M105 43 L110 24 L116 42" fill="#f7fbfd" stroke="#8aabb2" stroke-width="2"/><path d="M96 96 L116 99" stroke="#d5ad6b" stroke-width="6" stroke-linecap="round"/></svg>`;
 function monsterSVG(kind){
  const colors=['#79d4b5','#efb477','#b3c6f4','#aad884','#e2a0ca'];const c=colors[kind]||colors[0];
@@ -76,38 +98,120 @@ function monsterSVG(kind){
  return `<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="139" rx="39" ry="7" fill="#467d6955"/>${extras}<path d="M20 106 Q20 74 39 65 Q42 39 61 49 Q86 39 89 68 Q103 81 101 107 Q96 131 63 131 Q27 131 20 106 Z" fill="${c}" stroke="#598b83" stroke-width="3"/><ellipse cx="43" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="84" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="50" cy="90" rx="4.5" ry="6" fill="#32464d"/><ellipse cx="76" cy="90" rx="4.5" ry="6" fill="#32464d"/><circle cx="51" cy="88" r="1.5" fill="#fff"/><circle cx="77" cy="88" r="1.5" fill="#fff"/><path d="M58 104 Q63 111 69 104" fill="none" stroke="#52646b" stroke-width="3" stroke-linecap="round"/><path d="M31 83 Q39 69 50 70" stroke="#fff9" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`;
 }
 const potionSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="137" rx="35" ry="7" fill="#467d6955"/><path d="M45 21 H75 V48 Q98 64 94 96 Q91 129 60 130 Q29 129 26 96 Q21 64 45 48Z" fill="#e5f9ff" stroke="#5da1b5" stroke-width="5"/><path d="M33 86 Q43 77 55 84 Q71 93 89 81 L89 100 Q80 124 60 124 Q40 125 32 100Z" fill="#f187ac"/><rect x="42" y="15" width="36" height="16" rx="5" fill="#c78d56" stroke="#98683f" stroke-width="3"/><path d="M60 84 V109 M48 96 H72" stroke="#fff5f7" stroke-width="7" stroke-linecap="round"/><circle cx="43" cy="70" r="4" fill="#fff"/></svg>`;
-const state={phase:'title',index:0,enemyHP:10,heroHP:8,attackTurn:0,question:null,choiceList:[],locked:false,misses:0,hint:false,correctCount:0,soundOn:false};
+const state={phase:'title',stage:0,index:0,heroHP:10,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0};
 const pending=new Set();let audioContext=null;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-function later(fn,ms){const id=setTimeout(()=>{pending.delete(id);fn();},reduce?Math.min(ms,30):ms);pending.add(id);return id}
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+function later(fn,ms){const id=setTimeout(()=>{pending.delete(id);fn()},reduce?Math.min(ms,30):ms);pending.add(id);return id}
 function cancelPending(){for(const id of pending)clearTimeout(id);pending.clear()}
 function sound(kind){if(!state.soundOn)return;try{const AC=window.AudioContext||window.webkitAudioContext;if(!AC)return;if(!audioContext)audioContext=new AC();if(audioContext.state==='suspended')audioContext.resume().catch(()=>{});const frequencies={tap:[440],good:[523,659,784],wrong:[294],hit:[330,392],heal:[659,784,988],win:[523,659,784,1047]}[kind]||[440];for(let i=0;i<frequencies.length;i++){let o=audioContext.createOscillator(),g=audioContext.createGain(),t=audioContext.currentTime+i*.09;o.type='sine';o.frequency.value=frequencies[i];g.gain.setValueAtTime(.0001,t);g.gain.exponentialRampToValueAtTime(.065,t+.018);g.gain.exponentialRampToValueAtTime(.0001,t+.18);o.connect(g);g.connect(audioContext.destination);o.start(t);o.stop(t+.19)}}catch(_){}}
-function show(name){state.phase=name;for(const key of ['title','game','clear'])$(key+'Screen').hidden=key!==name}
+function show(name){state.phase=name;for(const key of ['title','game','clear','over'])$(key+'Screen').hidden=key!==name}
 function setStatus(message,kind=''){$('status').textContent=message;$('status').className='status '+kind}
-function updateBars(){const monster=MONSTERS[state.index];$('heroHpNum').textContent=state.heroHP+' / 12';$('heroHpBar').style.width=state.heroHP/12*100+'%';$('enemyHpNum').textContent=state.enemyHP+' / '+monster.max;$('enemyHpBar').style.width=state.enemyHP/monster.max*100+'%'}
+function updateBars(){const monster=MONSTERS[state.index];$('heroHpNum').textContent=state.heroHP+' / '+HERO_MAX;$('heroHpBar').style.width=100*state.heroHP/HERO_MAX+'%';$('enemyHpNum').textContent=state.enemyHP+' / '+monster.max;$('enemyHpBar').style.width=100*state.enemyHP/monster.max+'%'}
 function changeStages(){const fragment=document.createDocumentFragment();MONSTERS.forEach((_,i)=>{const dot=document.createElement('div');dot.className='stage-dot'+(i<state.index?' done':i===state.index?' current':'');fragment.append(dot)});$('stages').replaceChildren(fragment);$('stageCounter').textContent=(state.index+1)+' / 5 たい'}
-function updateScene(){const monster=MONSTERS[state.index];$('enemyName').textContent=monster.name;$('enemy').innerHTML=monsterSVG(monster.kind);$('enemy').append(makeLabel(monster.name));$('enemyHpBox').hidden=false;$('sceneBubble').textContent='⚔️ けいさんで こうげき！';$('hero').className='character hero-char';$('enemy').className='character enemy-char';updateBars();}
 function makeLabel(str){const s=document.createElement('div');s.className='char-label';s.textContent=str;return s}
-function shuffle(a){for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]]}return a}
-function answers(correct){let nums=new Set([correct]);const candidate=shuffle([correct-2,correct+1,correct-1,correct+2,correct+3,correct-3,correct+4,correct-4,0,10,12,5]);for(const x of candidate){if(x>=0&&x<=18)nums.add(x);if(nums.size>=3)break;}return shuffle([...nums].slice(0,3))}
-function setQuestion(type,before,amount){state.hint=false;state.misses=0;state.locked=false;state.question={type,before,amount,answer:type==='attack'?Math.max(0,before-amount):before+amount};$('hintPanel').hidden=true;$('hint').disabled=false;$('hint').textContent='💡 ヒントを みる';$('mathKind').className='math-kind'+(type==='potion'?' potion':'');$('mathKind').textContent=type==='potion'?'🧪 ポーションで かいふく！':'⚔️ けんで こうげき！';$('mathMini').textContent=type==='potion'?'かいふく +'+amount:'けんの つよさ '+amount;$('mathQuestion').textContent=before+(type==='potion'?' ＋ ':' − ')+amount+' ＝ ？';$('mathSub').textContent=type==='potion'?'のんだあとの ゆうしゃの HPは？':'こうげきしたら てきの HPは いくつ？';$('choices').replaceChildren();state.choiceList=answers(state.question.answer);for(const num of state.choiceList){const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=num;b.setAttribute('aria-label',num+' を えらぶ');b.addEventListener('click',()=>choose(num,b));$('choices').append(b)}setStatus('すうじを ひとつ えらんでね！')}
-function nextAttack(){let monster=MONSTERS[state.index];if(state.enemyHP<=0)return;const planned=monster.attacks[state.attackTurn]||Math.min(4,state.enemyHP);setQuestion('attack',state.enemyHP,Math.min(planned,state.enemyHP));}
-function nextMonster(){state.enemyHP=MONSTERS[state.index].max;state.attackTurn=0;$('scene').classList.remove('walking');updateScene();changeStages();setQuestion('attack',state.enemyHP,MONSTERS[state.index].attacks[0]);}
-function potion(){state.enemyHP=MONSTERS[state.index].max;$('enemy').className='character enemy-char';$('enemy').innerHTML=potionSVG;$('enemy').append(makeLabel('かいふくの くすり'));$('enemyName').textContent='ポーション';$('enemyHpBox').hidden=true;$('sceneBubble').textContent='🧪 HPを かいふくしよう！';changeStages();updateBars();const amount=Math.min(state.index===1?5:4,12-state.heroHP);setQuestion('potion',state.heroHP,amount)}
-function start(){cancelPending();Object.assign(state,{index:0,enemyHP:10,heroHP:8,attackTurn:0,question:null,locked:false,misses:0,hint:false,correctCount:0});$('scene').classList.remove('walking');$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
-function animateEffect(label,heal=false){const el=document.createElement('div');el.className='effect'+(heal?' heal':'');el.textContent=label;$('scene').append(el);later(()=>el.remove(),820)}
-function choose(num,button){if(state.phase!=='game'||state.locked||!state.question)return;const q=state.question;if(num!==q.answer){state.misses++;button.classList.remove('wrong');void button.offsetWidth;button.classList.add('wrong');setStatus('おしい！ もういちど かんがえてみよう','bad');sound('wrong');if(state.misses>=2)showHint();return}
- state.locked=true;$('hint').disabled=true;Array.from($('choices').children).forEach(b=>b.disabled=true);button.classList.add('correct');state.correctCount++;sound(q.type==='attack'?'good':'heal');
- if(q.type==='potion'){$('sceneBubble').textContent='💖 かいふく せいこう！';$('hero').classList.add('healing');state.heroHP=q.answer;animateEffect('+'+q.amount+' ♥',true);updateBars();setStatus('せいかい！ げんきに なったよ！');later(()=>{state.index++;travelToNext()},1050);return}
- state.enemyHP=q.answer;state.attackTurn++;$('hero').classList.add('attacking');$('enemy').classList.add('hit');animateEffect('−'+q.amount);updateBars();setStatus('せいかい！ '+q.amount+'ダメージ！');$('sceneBubble').textContent='✨ ヒット！';
- if(state.enemyHP===0){later(()=>{$('enemy').classList.remove('hit');$('enemy').classList.add('defeated');$('sceneBubble').textContent='やった！ '+MONSTERS[state.index].name+'に かった！';sound('win');},460);later(()=>{if(state.index===4){finish();return}if(state.index===1||state.index===3){potion()}else{state.index++;travelToNext()}},1500)}
- else{later(()=>{$('hero').classList.remove('attacking');$('enemy').classList.remove('hit');state.heroHP=Math.max(1,state.heroHP-1);$('hero').classList.add('ouch');updateBars();$('sceneBubble').textContent='てきの ぽよん！ −1 HP';setStatus('てきも はねかえした！ ゆうしゃ HP −1');sound('hit')},670);later(()=>{$('hero').classList.remove('ouch');$('sceneBubble').textContent='⚔️ もういちど こうげき！';nextAttack()},1520)}
+function updateScene(){const m=MONSTERS[state.index];$('enemyName').textContent=m.name;$('enemy').innerHTML=monsterSVG(m.kind);$('enemy').append(makeLabel(m.name));$('enemyHpBox').hidden=false;$('enemy').className='character enemy-char';$('hero').className='character hero-char';$('sceneBubble').textContent='⚔️ けいさんで たたかおう！';updateBars()}
+function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
+function options(correct){const pool=new Set([correct]);const deltas=shuffle([-1,1,-2,2,-3,3,-4,4,-5,5]);for(const d of deltas){const x=correct+d;if(x>=0&&x<=25)pool.add(x);if(pool.size>=3)break}return shuffle([...pool].slice(0,3))}
+/* A math problem is generated from the selected stage and NEVER becomes harder
+   later in the same five-enemy journey. Its format is independent of enemy HP. */
+function createQuestion(stageIndex,pattern){
+ const mode=STAGES[stageIndex].kind;
+ let a,b,c,op,answer,display,parts,idea='';
+ const p=pattern===undefined?rnd(0,2):pattern;
+ if(mode==='basic'){
+  if(rnd(0,1)===0){do{a=rnd(1,8);b=rnd(1,8)}while(a+b>10||a+b<3);op='+';answer=a+b}
+  else{a=rnd(4,10);b=rnd(1,a-1);op='−';answer=a-b}
+ }else if(mode==='nocarry'){
+  if(rnd(0,1)===0){a=rnd(11,16);b=rnd(1,Math.min(9,9-a%10));op='+';answer=a+b}
+  else{a=rnd(11,19);b=rnd(1,a%10);op='−';answer=a-b}
+ }else if(mode==='carry'){
+  do{a=rnd(3,9);b=rnd(2,9)}while(a+b<=10||a+b>18);op='+';answer=a+b
+ }else{
+  do{a=rnd(11,18);b=rnd(a%10+1,9)}while(a-b<2);op='−';answer=a-b
+ }
+ // 3-term sums/subtractions preserve the arithmetic range rules of the stage.
+ if(p===2){
+  if(mode==='basic'){
+   do{a=rnd(1,6);b=rnd(1,5);c=rnd(1,5)}while(a+b+c>10||a+b+c<5);
+   op='++';answer=a+b+c;display=`${a} ＋ ${b} ＋ ${c} ＝ ？`;parts=[a,b,c];idea=`まず ${a} ＋ ${b} を かんがえよう`;
+  }else if(mode==='nocarry'){
+   do{a=rnd(10,15);b=rnd(1,4);c=rnd(1,4)}while((a%10)+b+c>=10);
+   op='++';answer=a+b+c;display=`${a} ＋ ${b} ＋ ${c} ＝ ？`;parts=[a,b,c];idea=`まず ${a} ＋ ${b} を かんがえよう`;
+  }else if(mode==='carry'){
+   do{a=rnd(4,9);b=rnd(1,6);c=rnd(1,5)}while(a+b+c<11||a+b+c>19);
+   op='++';answer=a+b+c;display=`${a} ＋ ${b} ＋ ${c} ＝ ？`;parts=[a,b,c];idea=`${a} ＋ ${b} を してから、${c} を たそう`;
+  }else{
+   do{a=rnd(11,18);b=rnd(1,6);c=rnd(1,6)}while(b+c<=a%10||b+c>=a||a-b-c<1);
+   op='--';answer=a-b-c;display=`${a} − ${b} − ${c} ＝ ？`;parts=[a,b,c];idea=`${a} から ${b} を ひいて、そのあと ${c} を ひこう`;
+  }
+ }else if(p===1){
+   const leftBlank=op==='+'?rnd(0,1)===0:(mode==='borrow'?false:rnd(0,1)===0);
+   if(op==='+'){
+    display=leftBlank?`□ ＋ ${b} ＝ ${a+b}`:`${a} ＋ □ ＝ ${a+b}`;
+    answer=leftBlank?a:b;idea=`たしたら ${a+b}。□は いくつ かな？`;
+   }else{
+    display=leftBlank?`□ − ${b} ＝ ${a-b}`:`${a} − □ ＝ ${a-b}`;
+    answer=leftBlank?a:b;idea=`ひく まえの かずと、のこりを くらべよう`;
+   }
+   parts=[a,b];
+ }else{
+  display=`${a} ${op==='+'?'＋':'−'} ${b} ＝ ？`;
+  parts=[a,b];idea=op==='+'?'2つを あわせて かぞえよう':'いくつ へるのかな？';
+ }
+ // Every mode follows its own domain. Answer is not clamped and never assumed 0.
+ return {display,answer,op,parts,pattern:p,idea,mode};
 }
-function travelToNext(){$('scene').classList.add('walking');$('sceneBubble').textContent='🚶 つぎの モンスターへ！';setStatus('つぎの モンスターが まっているよ！');later(()=>nextMonster(),680)}
-function showHint(){if(state.phase!=='game'||!state.question)return;const q=state.question;state.hint=true;$('hintPanel').hidden=false;$('hint').textContent='💡 ヒントを かくす';$('hintTitle').textContent=q.type==='attack'?'うすい まるを のぞいて、のこりを かぞえよう':'みどりの まるも あわせて、かぞえよう';$('hintDots').replaceChildren();for(let i=0;i<(q.type==='attack'?q.before:q.answer);i++){const dot=document.createElement('span');dot.className='count-dot'+(q.type==='attack'&&i>=q.answer?' remove':q.type==='potion'&&i>=q.before?' add':'');dot.textContent='●';$('hintDots').append(dot)}$('hintCopy').textContent=q.type==='attack'?q.before+'こ から '+q.amount+'こ へらしてみよう':q.before+'こ に '+q.amount+'こ たしてみよう'}
-function toggleHint(){if(state.locked||state.phase!=='game')return;if(state.hint){state.hint=false;$('hintPanel').hidden=true;$('hint').textContent='💡 ヒントを みる'}else showHint()}
-function finish(){cancelPending();$('clearMaths').textContent='けいさん '+state.correctCount+'もん クリア！';show('clear');sound('win')}
-$('introHero').innerHTML=heroSVG;$('introEnemy').innerHTML=monsterSVG(0);$('start').addEventListener('click',start);$('retry').addEventListener('click',start);$('hint').addEventListener('click',toggleHint);$('quit').addEventListener('click',()=>{cancelPending();show('title')});$('home').addEventListener('click',()=>{cancelPending();show('title')});$('sound').addEventListener('click',()=>{state.soundOn=!state.soundOn;$('sound').textContent=state.soundOn?'♪ おと ON':'♪ おと OFF';$('sound').setAttribute('aria-pressed',String(state.soundOn));sound('tap')});
-// Testing hook is optional and has no impact on the game in normal browsers.
-if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,MONSTERS,start,choose,nextMonster,potion,answers});
+function uniqueQuestion(){let q;for(let i=0;i<70;i++){q=createQuestion(state.stage);if(!state.seen.has(q.display))break;}state.seen.add(q.display);return q}
+function showHint(){const q=state.question;if(!q)return;$('hintPanel').hidden=false;$('hintTitle').textContent='💡 ヒント！ もう いっかい かんがえよう';$('hintDots').replaceChildren();let before=q.parts[0];const count=Math.min(20,before);if(q.pattern!==1){for(let i=0;i<count;i++){const dot=document.createElement('span');dot.className='count-dot';dot.textContent=i===9?'10':'●';$('hintDots').append(dot)}}
+ let tip=q.idea;
+ if(q.mode==='carry'&&q.op!== '++'){const needed=10-q.parts[0];tip=`${q.parts[0]} に ${needed} を たすと 10。のこりを かんがえよう`;}
+ if(q.mode==='borrow'&&q.op==='−'&&q.pattern===0){const remove=q.parts[0]-10;tip=`まず ${q.parts[0]} − ${remove} ＝ 10。あと いくつ ひく？`;}
+ if(q.pattern===1)tip=q.idea+' ぎゃくの けいさんも つかえるよ';
+ $('hintCopy').textContent=tip;
+}
+function questionFor(turn){state.turn=turn;state.question=uniqueQuestion();state.misses=0;state.locked=false;$('hintPanel').hidden=true;
+ const details={attack:['⚔️ あなたの ばん','⚔️ こうげき','せいかいで 3 ダメージ','けいさんで モンスターを こうげき！'],defend:['🛡️ てきの ばん','🛡️ ぼうぎょ','せいかいで 1 ダメージ','せいかいすると ダメージを へらせる！'],potion:['🧪 かいふく','🧪 ポーション','せいかいで HP＋4','せいかいすると HPが かいふく！']}[turn];
+ $('turnTag').textContent=details[0];$('turnTag').className='turn-tag '+(turn==='defend'?'foe':turn==='potion'?'potion':'');$('tryMark').textContent='チャンス ２かい';$('mathKind').textContent=details[1];$('mathKind').className='math-kind'+(turn==='potion'?' potion':'');$('mathMini').textContent=details[2];$('mathQuestion').textContent=state.question.display;$('mathSub').textContent=details[3];$('choices').replaceChildren();state.choices=options(state.question.answer);
+ for(const n of state.choices){const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=n;b.setAttribute('aria-label',n+' を えらぶ');b.addEventListener('click',()=>choose(n,b));$('choices').append(b)}
+ setStatus('すうじを えらぼう！');$('sceneBubble').textContent=turn==='attack'?'⚔️ あなたの こうげき！':turn==='defend'?'🛡️ てきが こうげきしてくる！':'🧪 ポーションを つかおう！';
+}
+function animateEffect(label,kind='enemy'){const el=document.createElement('div');el.className='effect'+(kind==='heal'?' heal':kind==='hero'?' hero-damage':kind==='guard'?' guard':'');el.textContent=label;$('scene').append(el);later(()=>el.remove(),820)}
+function lockChoices(button){state.locked=true;[...$('choices').children].forEach(b=>b.disabled=true);if(button)button.classList.add('correct')}
+function choose(num,button){if(state.phase!=='game'||state.locked||!state.question)return;
+ const q=state.question;if(num!==q.answer){state.misses++;state.wrongCount++;button.classList.remove('wrong');void button.offsetWidth;button.classList.add('wrong');sound('wrong');
+   if(state.misses===1){showHint();$('tryMark').textContent='あと １かい';setStatus('おしい！ ヒントを みて もう１かい','bad');return}
+   lockChoices();setStatus('せいかいは '+q.answer+'。こんかいは しっぱい！','bad');$('sceneBubble').textContent='あれれ！ しっぱい！';later(()=>resolveTurn(false),950);return;
+ }
+ lockChoices(button);state.correctCount++;sound('good');setStatus('せいかい！ よく できたね！');later(()=>resolveTurn(true),260);
+}
+function resolveTurn(ok){if(state.phase!=='game')return;
+ if(state.turn==='attack'){
+  if(ok){const damage=Math.min(3,state.enemyHP);state.enemyHP=Math.max(0,state.enemyHP-damage);$('hero').classList.add('attacking');$('enemy').classList.add('hit');animateEffect('−'+damage);sound('hit');$('sceneBubble').textContent='✨ こうげき せいこう！';updateBars();}
+  else{$('sceneBubble').textContent='こうげき しっぱい！'}
+  if(state.enemyHP<=0){later(()=>{$('enemy').classList.remove('hit');$('enemy').classList.add('defeated');sound('win');$('sceneBubble').textContent='モンスターを たおした！'},430);later(nextAfterMonster,1220)}
+  else{later(()=>{$('hero').classList.remove('attacking');$('enemy').classList.remove('hit');questionFor('defend')},900)}
+ }else if(state.turn==='defend'){
+  const damage=ok?1:3;state.heroHP=Math.max(0,state.heroHP-damage);$('hero').classList.add('ouch');animateEffect('−'+damage,'hero');$('sceneBubble').textContent=ok?'🛡️ ぼうぎょ！ ダメージを へらした！':'💥 ぼうぎょ しっぱい！';updateBars();sound('hit');
+  if(state.heroHP===0){later(gameOver,900)}else{later(()=>{$('hero').classList.remove('ouch');questionFor('attack')},1050)}
+ }else{
+  if(ok){const healed=Math.min(4,HERO_MAX-state.heroHP);state.heroHP+=healed;animateEffect('＋'+healed+' ♥','heal');$('sceneBubble').textContent='💖 かいふく せいこう！';updateBars();sound('heal')}
+  else{$('sceneBubble').textContent='かいふく しっぱい！'}
+  later(()=>{state.index++;travelToNext()},850);
+ }
+}
+function nextAfterMonster(){if(state.index===MONSTERS.length-1){finish();return}
+ if(state.index===1||state.index===3){potion()}else{state.index++;travelToNext()}}
+function potion(){$('enemy').className='character enemy-char';$('enemy').innerHTML=potionSVG;$('enemy').append(makeLabel('かいふくの くすり'));$('enemyName').textContent='ポーション';$('enemyHpBox').hidden=true;state.healUsed++;questionFor('potion')}
+function travelToNext(){$('scene').classList.add('walking');$('sceneBubble').textContent='🚶 つぎの モンスターへ！';later(nextMonster,700)}
+function nextMonster(){state.enemyHP=MONSTERS[state.index].max;$('scene').classList.remove('walking');$('stageName').textContent=STAGES[state.stage].icon+' '+STAGES[state.stage].name;updateScene();changeStages();questionFor('attack')}
+function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:10,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
+function finish(){cancelPending();$('clearCopy').textContent=STAGES[state.stage].label+' の ぼうけん せいこう！';$('clearMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';show('clear');sound('win')}
+function gameOver(){cancelPending();$('overCount').textContent=state.index+' たい';$('overMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';show('over');sound('wrong')}
+function renderStageSelect(){for(const [i,stage] of STAGES.entries()){const b=document.createElement('button');b.type='button';b.className='stage-card '+stage.id;b.innerHTML='<span class="emoji" aria-hidden="true">'+stage.icon+'</span><strong>'+stage.label+'</strong><small>'+stage.detail+'</small>';b.addEventListener('click',()=>start(i));$('stageSelect').append(b)}}
+$('introHero').innerHTML=heroSVG;$('introEnemy').innerHTML=monsterSVG(0);renderStageSelect();
+$('retry').addEventListener('click',()=>start(state.stage));$('restart').addEventListener('click',()=>start(state.stage));
+for(const id of ['quit','home','overHome'])$(id).addEventListener('click',()=>{cancelPending();show('title')});
+$('sound').addEventListener('click',()=>{state.soundOn=!state.soundOn;$('sound').textContent=state.soundOn?'♪ おと ON':'♪ おと OFF';$('sound').setAttribute('aria-pressed',String(state.soundOn));sound('tap')});
+if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,STAGES,MONSTERS,createQuestion,start,choose,questionFor,options,resolveTurn,gameOver});
 })();
 </script></body></html>

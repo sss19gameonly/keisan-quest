@@ -20,7 +20,7 @@
 .character{position:absolute;bottom:21px;z-index:3;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;width:122px;height:151px;filter:drop-shadow(0 4px 0 #52784c44)}.hero-char{left:7%;transform-origin:50% 85%;animation:idle 2s ease-in-out infinite}.enemy-char{right:4%;transform-origin:50% 88%;animation:enemyIdle 1.75s ease-in-out infinite}.character svg{display:block;max-width:115px;width:100%;height:134px;overflow:visible}.char-label{position:absolute;bottom:-5px;white-space:nowrap;border-radius:10px;padding:3px 8px;background:#ffffffea;color:#51644c;font-size:10px;font-weight:950;border:1px solid #d6e3cb;box-shadow:0 2px 0 #c7d6bd}.hero-char.attacking{animation:heroStrike .45s ease-in-out!important}.enemy-char.hit{animation:hit .38s ease-in-out!important}.enemy-char.defeated{animation:vanish .48s ease-in forwards!important}.hero-char.ouch{animation:ouch .36s ease-in-out!important}.scene .effect{position:absolute;z-index:10;top:43px;right:10%;color:#ef6b59;text-shadow:0 3px 0 #fff8ec,2px 0 #fff8ec;font-size:30px;font-weight:950;animation:effectRise .8s ease-out forwards}.scene .effect.heal{right:auto;left:13%;color:#2d9f7b}
 .hud{position:absolute;top:9px;left:9px;right:9px;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;z-index:5}.hpbox{width:116px;padding:7px 8px 8px;background:#fffcf0ed;border:1px solid #ffffff;border-radius:12px;box-shadow:0 3px 0 #c7d7c3ab}.hpbox.enemy-hp{background:#fff7f2ed}.hp-heading{display:flex;justify-content:space-between;font-size:10px;font-weight:950;margin-bottom:5px;gap:5px}.health-track{height:10px;background:#dfe5d8;border-radius:8px;overflow:hidden}.health-fill{height:100%;background:#62bca2;border-radius:8px;transition:width .4s ease}.enemy-hp .health-fill{background:#eb9b6b}
 .bubble{position:absolute;z-index:6;bottom:5px;left:50%;transform:translateX(-50%);font-size:12px;font-weight:950;color:#795935;background:#fffce9;border:1px solid #ebd2a8;border-radius:15px;padding:6px 12px;white-space:nowrap;box-shadow:0 3px 0 #e0cbac}.battle-ui{background:#fffefa;border:1px solid #e8eadf;border-radius:22px;margin-top:16px;padding:15px 14px 16px;box-shadow:0 5px 0 #e0e9d9}.math-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 7px}.math-kind{font-size:12px;font-weight:950;color:#568579}.math-kind.potion{color:#478aaf}.math-mini{font-size:11px;color:#89958a;font-weight:850}.math-q{text-align:center;font-size:37px;font-weight:950;letter-spacing:.04em;margin:1px 0 3px;font-variant-numeric:tabular-nums;white-space:nowrap}.math-sub{text-align:center;font-size:12px;color:#6b7c7a;font-weight:850;line-height:1.6;min-height:20px;margin:0 0 13px}
-.answer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.answer{height:66px;border-radius:17px;border:2px solid #dfe9df;background:#f9fbf1;box-shadow:0 4px 0 #d6e2d6;font-weight:950;font-size:28px;color:#29434c;transition:transform .12s,background .12s}.answer:active{transform:translateY(3px);box-shadow:0 1px 0 #d6e2d6}.answer.correct{border-color:#3aaf8b;background:#e5f7e9;box-shadow:0 3px 0 #9adabb}.answer.wrong{border-color:#efb6a5;background:#fff1e9;animation:wrong .25s}.status{display:flex;align-items:center;justify-content:center;text-align:center;min-height:26px;margin:12px 0 0;color:#527873;font-size:12px;font-weight:950;line-height:1.5}.status.bad{color:#af694a}.assist{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 2px 0}.assist-note{font-size:11px;font-weight:800;color:#89978b}.hint-btn{border:1px solid #dbe4d8;background:#fffef7;border-radius:12px;min-height:40px;padding:0 11px;font-size:12px;color:#6e7b69;font-weight:950}.hint-btn:disabled{opacity:.5}.hint-panel{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f1f8ee;border:1px dashed #b6d4be}.hint-title{font-size:12px;font-weight:950;color:#456d5b;margin-bottom:8px}.count-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:255px;margin:auto}.count-dot{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#f4bb64;border:1px solid #dc9a44;color:#805a2f;font-size:10px;font-weight:950}.count-dot.remove{background:#f2d5ce;border:1px dashed #df8f83;color:#ab7771;text-decoration:line-through;opacity:.65}.count-dot.add{background:#80ceac;border-color:#56b58a;color:#135740}.hint-copy{font-size:11px;color:#6b8374;text-align:center;margin:8px 0 0;font-weight:850;line-height:1.5}
+.answer-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:9px}.answer{height:66px;border-radius:17px;border:2px solid #dfe9df;background:#f9fbf1;box-shadow:0 4px 0 #d6e2d6;font-weight:950;font-size:28px;color:#29434c;transition:transform .12s,background .12s}.answer:active{transform:translateY(3px);box-shadow:0 1px 0 #d6e2d6}.answer.correct{border-color:#3aaf8b;background:#e5f7e9;box-shadow:0 3px 0 #9adabb}.answer.wrong{border-color:#efb6a5;background:#fff1e9;animation:wrong .25s}.answer.used{position:relative;background:#edf0ea;border-color:#d8ddd4;color:#97a09b;box-shadow:0 2px 0 #d5ddd4;cursor:default;opacity:.8}.answer.used::after{content:'✕';position:absolute;right:9px;top:3px;font-size:16px;font-weight:900;color:#b8716a}.status{display:flex;align-items:center;justify-content:center;text-align:center;min-height:26px;margin:12px 0 0;color:#527873;font-size:12px;font-weight:950;line-height:1.5}.status.bad{color:#af694a}.assist{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:12px 2px 0}.assist-note{font-size:11px;font-weight:800;color:#89978b}.hint-btn{border:1px solid #dbe4d8;background:#fffef7;border-radius:12px;min-height:40px;padding:0 11px;font-size:12px;color:#6e7b69;font-weight:950}.hint-btn:disabled{opacity:.5}.hint-panel{margin-top:12px;padding:11px 12px;border-radius:14px;background:#f1f8ee;border:1px dashed #b6d4be}.hint-title{font-size:12px;font-weight:950;color:#456d5b;margin-bottom:8px}.count-dots{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;max-width:255px;margin:auto}.count-dot{display:grid;place-items:center;width:22px;height:22px;border-radius:50%;background:#f4bb64;border:1px solid #dc9a44;color:#805a2f;font-size:10px;font-weight:950}.count-dot.remove{background:#f2d5ce;border:1px dashed #df8f83;color:#ab7771;text-decoration:line-through;opacity:.65}.count-dot.add{background:#80ceac;border-color:#56b58a;color:#135740}.hint-copy{font-size:11px;color:#6b8374;text-align:center;margin:8px 0 0;font-weight:850;line-height:1.5}
 .clear{text-align:center;padding:20px 4px 5px}.medal{font-size:76px;margin:19px auto 10px;filter:drop-shadow(0 6px 0 #e8d5a1)}.clear-title{font-size:29px;font-weight:950;line-height:1.4;margin:8px 0}.clear-copy{font-weight:850;color:#6a7c79;font-size:14px;line-height:1.85}.trophy-panel{background:#fffdf5;border:1px solid #e5e9dd;border-radius:22px;padding:20px;margin:25px 0}.trophy-num{font-weight:950;font-size:37px;color:#2a9983}.trophy-small{font-weight:850;font-size:12px;color:#88998b}.secondary{display:block;background:none;border:0;margin:15px auto;color:#7c8e8a;font-size:13px;font-weight:900;padding:7px 15px}
 @keyframes idle{50%{transform:translateY(-4px)}}@keyframes enemyIdle{50%{transform:translateY(-7px) rotate(2deg)}}@keyframes heroStrike{48%{transform:translateX(24px) rotate(-8deg)}100%{transform:translateX(0)}}@keyframes hit{25%{transform:translateX(9px) rotate(10deg);filter:brightness(1.4)}55%{transform:translateX(-5px) rotate(-6deg)}}@keyframes vanish{100%{opacity:0;transform:scale(.3) translateY(-55px)}}@keyframes ouch{30%{transform:translateX(-10px)}60%{transform:translateX(5px)}}@keyframes effectRise{0%{opacity:0;transform:translateY(14px) scale(.7)}30%{opacity:1;transform:translateY(0) scale(1.15)}100%{opacity:0;transform:translateY(-45px)}}@keyframes wrong{25%{transform:translateX(-3px)}75%{transform:translateX(3px)}}@keyframes walkby{to{transform:translateX(-70px)}}
 @media (max-height:770px){.app{padding-top:calc(8px + env(safe-area-inset-top))}.top{margin-bottom:5px}.stagebar{margin-bottom:7px}.stages{margin-bottom:8px}.scene{height:205px}.character{bottom:16px;transform:scale(.9);transform-origin:bottom center}.battle-ui{margin-top:13px;padding:12px}.answer{height:58px}.math-q{font-size:33px}.math-sub{margin-bottom:9px}.assist{margin-top:8px}}
@@ -36,6 +36,13 @@
 .gameover{padding-top:25px}.gameover .medal{font-size:70px}.gameover .clear-title{color:#a66957}
 @media(max-width:350px){.stage-select{gap:7px}.stage-card{padding:10px;min-height:110px}.stage-card strong{font-size:12px}.intro-world{height:145px}.math-q{font-size:24px}.stage-name{font-size:14px}}
 @media(max-height:750px){.scene{height:185px}.character{bottom:12px}.battle-ui{padding:10px}.answer{height:54px}.turn-strip{margin:4px 0 2px}.math-q{min-height:38px}.intro-world{height:145px}}
+
+/* v0.2.2: explain intermediate math rather than showing unrelated dots */
+.hint-panel{padding:13px 12px}.hint-title{font-size:14px;line-height:1.5;margin-bottom:9px;text-align:center}
+.hint-steps{display:flex;flex-direction:column;gap:7px}.hint-step{background:#fffdf6;border:1px solid #d6e5d7;border-radius:12px;padding:8px 11px;text-align:center}
+.hint-step-label{color:#637f73;font-size:12px;font-weight:900;line-height:1.45;margin-bottom:4px}.hint-formula{font-size:clamp(18px,6vw,25px);font-weight:950;color:#29434c;letter-spacing:.015em;line-height:1.35;font-variant-numeric:tabular-nums}
+.hint-copy{font-size:12px;line-height:1.6;color:#4e7765;margin-top:9px}
+.hint-objects{display:flex;justify-content:center;flex-wrap:wrap;align-items:center;gap:6px;margin-top:4px}.hint-object-group{display:flex;max-width:115px;justify-content:center;align-items:center;flex-wrap:wrap;gap:3px}.hint-object-label{width:100%;font-size:11px;font-weight:850;color:#637d74;margin-bottom:3px;text-align:center}.hint-object{width:15px;height:15px;border-radius:50%;background:#f0bd62;box-shadow:inset 0 -2px 0 #dba14d}.hint-object.more{background:#75c5a0;box-shadow:inset 0 -2px 0 #52a981}.hint-object.cross{background:#e6e6e0;box-shadow:inset 0 -2px 0 #c8cec4;position:relative}.hint-object.cross::after{content:'×';position:absolute;inset:0;display:grid;place-items:center;color:#b16e66;font-size:15px;font-weight:900;line-height:1}.hint-object-plus{font-size:21px;font-weight:950;color:#84a997;padding-top:13px}
 </style>
 </head>
 
@@ -52,7 +59,7 @@
  <div class="stages" id="stages" aria-label="5体のモンスター"></div>
  <div class="scene" id="scene" role="img" aria-label="ゆうしゃとモンスターが向かい合っている">
   <div class="sun"></div><div class="cloud"></div><div class="cloud two"></div><div class="hill back"></div><div class="hill"></div><div class="tree"></div><div class="tree t2"></div><div class="tree t3"></div><div class="flowers">✿ ✿</div><div class="ground"></div>
-  <div class="hud"><div class="hpbox"><div class="hp-heading"><span>🧑 ゆうしゃ</span><span id="heroHpNum">10 / 12</span></div><div class="health-track"><div class="health-fill" id="heroHpBar"></div></div></div><div class="hpbox enemy-hp" id="enemyHpBox"><div class="hp-heading"><span id="enemyName">ぷにスライム</span><span id="enemyHpNum">9 / 9</span></div><div class="health-track"><div class="health-fill" id="enemyHpBar"></div></div></div></div>
+  <div class="hud"><div class="hpbox"><div class="hp-heading"><span>🧑 ゆうしゃ</span><span id="heroHpNum">16 / 16</span></div><div class="health-track"><div class="health-fill" id="heroHpBar"></div></div></div><div class="hpbox enemy-hp" id="enemyHpBox"><div class="hp-heading"><span id="enemyName">ぷにスライム</span><span id="enemyHpNum">9 / 9</span></div><div class="health-track"><div class="health-fill" id="enemyHpBar"></div></div></div></div>
   <div class="character hero-char" id="hero"></div><div class="character enemy-char" id="enemy"></div><div class="bubble" id="sceneBubble">⚔️ こうげき！</div>
  </div>
  <div class="turn-strip"><span class="turn-tag" id="turnTag">⚔️ あなたの ばん</span><span class="try-mark" id="tryMark">チャンス ２かい</span></div>
@@ -60,7 +67,7 @@
   <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき</span><span class="math-mini" id="mathMini">せいかいで 3 ダメージ</span></div>
   <div class="math-q" id="mathQuestion" aria-live="polite">5 ＋ 3 ＝ ？</div><p class="math-sub" id="mathSub">けいさんして こうげきしよう！</p>
   <div class="answer-grid" id="choices" role="group" aria-label="こたえを えらんでね"></div><p class="status" id="status" role="status" aria-live="polite">すうじを ひとつ えらんでね！</p>
-  <div class="hint-panel" id="hintPanel" hidden><div class="hint-title" id="hintTitle">ヒント</div><div class="count-dots" id="hintDots"></div><p class="hint-copy" id="hintCopy"></p></div>
+  <div class="hint-panel" id="hintPanel" hidden><div class="hint-title" id="hintTitle">ヒント</div><div class="hint-steps" id="hintSteps"></div><p class="hint-copy" id="hintCopy"></p></div>
  </div>
  <div class="assist"><span class="assist-note">１かいめの ミスは ペナルティなし<br>２かいめの ミスで こうどう しっぱい</span></div>
  <button class="secondary" id="quit">はじめに もどる</button>
@@ -70,7 +77,7 @@
 </main>
 <script>
 
-/* けいさんクエスト v0.2 - single offline HTML; stages and turns */
+/* けいさんクエスト v0.2.2 - clear, problem-specific learning hints */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const STAGES=[
@@ -86,7 +93,7 @@ const MONSTERS=[
  {name:'はっぱん',max:9,kind:3},
  {name:'おおきな ぷに',max:12,kind:4}
 ];
-const HERO_MAX=12;
+const HERO_MAX=16;
 const heroSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="137" rx="40" ry="7" fill="#467d6966"/><path d="M37 88 Q17 114 31 131 L86 131 Q96 111 82 87 Z" fill="#3f9c94" stroke="#2b7275" stroke-width="3"/><path d="M43 111 L38 135 M78 111 L84 135" stroke="#675f64" stroke-width="12" stroke-linecap="round"/><rect x="42" y="78" width="39" height="34" rx="9" fill="#e5b775" stroke="#b37b50" stroke-width="3"/><path d="M60 78 L60 111 M46 92 L75 92" stroke="#f8e9a2" stroke-width="5" stroke-linecap="round"/><rect x="43" y="31" width="37" height="54" rx="18" fill="#ffdab1" stroke="#a67868" stroke-width="3"/><path d="M39 52 Q36 21 61 20 Q83 21 84 52 Q73 40 57 42 Q46 48 39 52" fill="#6c554b"/><path d="M36 49 Q39 13 60 13 Q85 14 85 48" fill="#5277b5" stroke="#355989" stroke-width="3"/><rect x="33" y="44" width="54" height="8" rx="4" fill="#f2d38c"/><circle cx="54" cy="62" r="2.7" fill="#514b43"/><circle cx="70" cy="62" r="2.7" fill="#514b43"/><path d="M57 70 Q62 74 68 70" fill="none" stroke="#a96c68" stroke-width="2.5" stroke-linecap="round"/><path d="M29 91 L15 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M88 93 L99 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M101 101 L110 44" stroke="#9aaeb7" stroke-width="7" stroke-linecap="round"/><path d="M105 43 L110 24 L116 42" fill="#f7fbfd" stroke="#8aabb2" stroke-width="2"/><path d="M96 96 L116 99" stroke="#d5ad6b" stroke-width="6" stroke-linecap="round"/></svg>`;
 function monsterSVG(kind){
  const colors=['#79d4b5','#efb477','#b3c6f4','#aad884','#e2a0ca'];const c=colors[kind]||colors[0];
@@ -98,7 +105,7 @@ function monsterSVG(kind){
  return `<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="139" rx="39" ry="7" fill="#467d6955"/>${extras}<path d="M20 106 Q20 74 39 65 Q42 39 61 49 Q86 39 89 68 Q103 81 101 107 Q96 131 63 131 Q27 131 20 106 Z" fill="${c}" stroke="#598b83" stroke-width="3"/><ellipse cx="43" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="84" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="50" cy="90" rx="4.5" ry="6" fill="#32464d"/><ellipse cx="76" cy="90" rx="4.5" ry="6" fill="#32464d"/><circle cx="51" cy="88" r="1.5" fill="#fff"/><circle cx="77" cy="88" r="1.5" fill="#fff"/><path d="M58 104 Q63 111 69 104" fill="none" stroke="#52646b" stroke-width="3" stroke-linecap="round"/><path d="M31 83 Q39 69 50 70" stroke="#fff9" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`;
 }
 const potionSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="137" rx="35" ry="7" fill="#467d6955"/><path d="M45 21 H75 V48 Q98 64 94 96 Q91 129 60 130 Q29 129 26 96 Q21 64 45 48Z" fill="#e5f9ff" stroke="#5da1b5" stroke-width="5"/><path d="M33 86 Q43 77 55 84 Q71 93 89 81 L89 100 Q80 124 60 124 Q40 125 32 100Z" fill="#f187ac"/><rect x="42" y="15" width="36" height="16" rx="5" fill="#c78d56" stroke="#98683f" stroke-width="3"/><path d="M60 84 V109 M48 96 H72" stroke="#fff5f7" stroke-width="7" stroke-linecap="round"/><circle cx="43" cy="70" r="4" fill="#fff"/></svg>`;
-const state={phase:'title',stage:0,index:0,heroHP:10,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0};
+const state={phase:'title',stage:0,index:0,heroHP:16,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0};
 const pending=new Set();let audioContext=null;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function later(fn,ms){const id=setTimeout(()=>{pending.delete(id);fn()},reduce?Math.min(ms,30):ms);pending.add(id);return id}
@@ -162,13 +169,77 @@ function createQuestion(stageIndex,pattern){
  return {display,answer,op,parts,pattern:p,idea,mode};
 }
 function uniqueQuestion(){let q;for(let i=0;i<70;i++){q=createQuestion(state.stage);if(!state.seen.has(q.display))break;}state.seen.add(q.display);return q}
-function showHint(){const q=state.question;if(!q)return;$('hintPanel').hidden=false;$('hintTitle').textContent='💡 ヒント！ もう いっかい かんがえよう';$('hintDots').replaceChildren();let before=q.parts[0];const count=Math.min(20,before);if(q.pattern!==1){for(let i=0;i<count;i++){const dot=document.createElement('span');dot.className='count-dot';dot.textContent=i===9?'10':'●';$('hintDots').append(dot)}}
- let tip=q.idea;
- if(q.mode==='carry'&&q.op!== '++'){const needed=10-q.parts[0];tip=`${q.parts[0]} に ${needed} を たすと 10。のこりを かんがえよう`;}
- if(q.mode==='borrow'&&q.op==='−'&&q.pattern===0){const remove=q.parts[0]-10;tip=`まず ${q.parts[0]} − ${remove} ＝ 10。あと いくつ ひく？`;}
- if(q.pattern===1)tip=q.idea+' ぎゃくの けいさんも つかえるよ';
- $('hintCopy').textContent=tip;
+function addHintStep(label,formula){
+ const step=document.createElement('div');step.className='hint-step';
+ const heading=document.createElement('div');heading.className='hint-step-label';heading.textContent=label;
+ const math=document.createElement('div');math.className='hint-formula';math.textContent=formula;
+ step.append(heading,math);$('hintSteps').append(step);
 }
+function addCountPicture(op,a,b){
+ // Use objects only when their meaning is visible: addition has two labeled
+ // groups; subtraction has exactly b crossed-out objects in the original a.
+ const row=document.createElement('div');row.className='hint-objects';
+ function group(count,label,kind='normal',remove=0){
+  const wrap=document.createElement('div');wrap.className='hint-object-group';
+  const title=document.createElement('span');title.className='hint-object-label';title.textContent=label;wrap.append(title);
+  for(let i=0;i<count;i++){
+   const dot=document.createElement('span');dot.className='hint-object'+(kind==='more'?' more':'')+(i>=count-remove?' cross':'');dot.setAttribute('aria-hidden','true');wrap.append(dot);
+  }
+  return wrap;
+ }
+ if(op==='+'){
+  row.append(group(a,`${a}こ`),group(b,`${b}こ`,'more'));
+  const plus=document.createElement('span');plus.className='hint-object-plus';plus.textContent='＋';row.insertBefore(plus,row.children[1]);
+ }else row.append(group(a,`${a}こ から ${b}こ ひく`,'normal',b));
+ const step=document.createElement('div');step.className='hint-step';step.append(row);$('hintSteps').append(step);
+}
+function showHint(){
+ const q=state.question;if(!q)return;
+ $('hintPanel').hidden=false;$('hintSteps').replaceChildren();
+ $('hintTitle').textContent='💡 ヒント！ いっしょに かんがえよう';
+ const [a,b,c]=q.parts;
+ let note='こたえを えらんでみよう！';
+ if(q.pattern===2){
+  const subtraction=q.op==='--',sign=subtraction?'−':'＋';
+  const halfway=subtraction?a-b:a+b;
+  addHintStep('① まず はじめの ふたつを けいさん',`${a} ${sign} ${b} ＝ ${halfway}`);
+  addHintStep('② つぎに のこりの かずを けいさん',`${halfway} ${sign} ${c} ＝ ？`);
+  note='②の こたえを えらぼう。';
+ }else if(q.pattern===1){
+  const startsBlank=q.display.startsWith('□');
+  if(q.op==='+'){
+   const total=a+b,known=startsBlank?b:a;
+   addHintStep('たしざんを ひきざんに かえてみよう',`${total} − ${known} ＝ □`);
+   note='ぜんぶの かずから、わかっている かずを ひこう。';
+  }else if(startsBlank){
+   addHintStep('もとの かずに もどしてみよう',`${a-b} ＋ ${b} ＝ □`);
+   note='のこりに ひいた かずを たそう。';
+  }else{
+   addHintStep('もとの かずから のこりを ひこう',`${a} − ${a-b} ＝ □`);
+   note='なくなった かずが □ に はいるよ。';
+  }
+ }else if(q.op==='+'&&a+b>10){
+  const needed=10-a,rest=b-needed;
+  addHintStep('① まず 10を つくろう',`${a} ＋ ${needed} ＝ 10`);
+  addHintStep('② のこりを たしてみよう',`10 ＋ ${rest} ＝ ？`);
+  note=`${b}を ${needed}と ${rest}に わけたよ。`;
+ }else if(q.op==='−'&&a>10&&b>a-10){
+  const toTen=a-10,rest=b-toTen;
+  addHintStep('① まず 10に もどそう',`${a} − ${toTen} ＝ 10`);
+  addHintStep('② のこりを ひこう',`10 − ${rest} ＝ ？`);
+  note=`${b}を ${toTen}と ${rest}に わけたよ。`;
+ }else if(q.op==='+'){
+  addHintStep('はじめの かずに、あとから たそう',`${a} ＋ ${b} ＝ ？`);
+  addCountPicture('+',a,b);
+  note='ふたつの いろの まるを ぜんぶ かぞえよう。';
+ }else{
+  addHintStep('もとの かずから ひこう',`${a} − ${b} ＝ ？`);
+  addCountPicture('−',a,b);
+  note='×の ついていない まるを かぞえよう。';
+ }
+ $('hintCopy').textContent=note;
+}
+
 function questionFor(turn){state.turn=turn;state.question=uniqueQuestion();state.misses=0;state.locked=false;$('hintPanel').hidden=true;
  const details={attack:['⚔️ あなたの ばん','⚔️ こうげき','せいかいで 3 ダメージ','けいさんで モンスターを こうげき！'],defend:['🛡️ てきの ばん','🛡️ ぼうぎょ','せいかいで 1 ダメージ','せいかいすると ダメージを へらせる！'],potion:['🧪 かいふく','🧪 ポーション','せいかいで HP＋4','せいかいすると HPが かいふく！']}[turn];
  $('turnTag').textContent=details[0];$('turnTag').className='turn-tag '+(turn==='defend'?'foe':turn==='potion'?'potion':'');$('tryMark').textContent='チャンス ２かい';$('mathKind').textContent=details[1];$('mathKind').className='math-kind'+(turn==='potion'?' potion':'');$('mathMini').textContent=details[2];$('mathQuestion').textContent=state.question.display;$('mathSub').textContent=details[3];$('choices').replaceChildren();state.choices=options(state.question.answer);
@@ -177,9 +248,9 @@ function questionFor(turn){state.turn=turn;state.question=uniqueQuestion();state
 }
 function animateEffect(label,kind='enemy'){const el=document.createElement('div');el.className='effect'+(kind==='heal'?' heal':kind==='hero'?' hero-damage':kind==='guard'?' guard':'');el.textContent=label;$('scene').append(el);later(()=>el.remove(),820)}
 function lockChoices(button){state.locked=true;[...$('choices').children].forEach(b=>b.disabled=true);if(button)button.classList.add('correct')}
-function choose(num,button){if(state.phase!=='game'||state.locked||!state.question)return;
+function choose(num,button){if(state.phase!=='game'||state.locked||!state.question||button.disabled)return;
  const q=state.question;if(num!==q.answer){state.misses++;state.wrongCount++;button.classList.remove('wrong');void button.offsetWidth;button.classList.add('wrong');sound('wrong');
-   if(state.misses===1){showHint();$('tryMark').textContent='あと １かい';setStatus('おしい！ ヒントを みて もう１かい','bad');return}
+   if(state.misses===1){button.disabled=true;button.classList.add('used');button.setAttribute('aria-label',num+' は ちがうよ。もう えらべない');showHint();$('tryMark').textContent='あと １かい';setStatus('おしい！ ちがった すうじは えらべないよ。ヒントを みよう','bad');return}
    lockChoices();setStatus('せいかいは '+q.answer+'。こんかいは しっぱい！','bad');$('sceneBubble').textContent='あれれ！ しっぱい！';later(()=>resolveTurn(false),950);return;
  }
  lockChoices(button);state.correctCount++;sound('good');setStatus('せいかい！ よく できたね！');later(()=>resolveTurn(true),260);
@@ -204,7 +275,7 @@ function nextAfterMonster(){if(state.index===MONSTERS.length-1){finish();return}
 function potion(){$('enemy').className='character enemy-char';$('enemy').innerHTML=potionSVG;$('enemy').append(makeLabel('かいふくの くすり'));$('enemyName').textContent='ポーション';$('enemyHpBox').hidden=true;state.healUsed++;questionFor('potion')}
 function travelToNext(){$('scene').classList.add('walking');$('sceneBubble').textContent='🚶 つぎの モンスターへ！';later(nextMonster,700)}
 function nextMonster(){state.enemyHP=MONSTERS[state.index].max;$('scene').classList.remove('walking');$('stageName').textContent=STAGES[state.stage].icon+' '+STAGES[state.stage].name;updateScene();changeStages();questionFor('attack')}
-function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:10,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
+function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:HERO_MAX,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
 function finish(){cancelPending();$('clearCopy').textContent=STAGES[state.stage].label+' の ぼうけん せいこう！';$('clearMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';show('clear');sound('win')}
 function gameOver(){cancelPending();$('overCount').textContent=state.index+' たい';$('overMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';show('over');sound('wrong')}
 function renderStageSelect(){for(const [i,stage] of STAGES.entries()){const b=document.createElement('button');b.type='button';b.className='stage-card '+stage.id;b.innerHTML='<span class="emoji" aria-hidden="true">'+stage.icon+'</span><strong>'+stage.label+'</strong><small>'+stage.detail+'</small>';b.addEventListener('click',()=>start(i));$('stageSelect').append(b)}}

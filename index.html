@@ -100,6 +100,26 @@
 @keyframes stickerPop{0%{opacity:0;transform:scale(.2) rotate(-18deg)}60%{opacity:1;transform:scale(1.1) rotate(7deg)}100%{opacity:1;transform:scale(1) rotate(-4deg)}}
 @media(prefers-reduced-motion:reduce){.reward-showcase img{animation:none}}
 @media(max-width:355px){.sticker-grid{gap:5px}.sticker-cell.has-art small{font-size:8px}.next-sticker img{width:62px;height:62px}}
+
+/* v0.5: boss clarity, once-per-run skills, checkpoint retry (all CSS, no new graphic asset) */
+.skill-area{margin:8px 0 4px;padding:8px;border:1px solid #d9e8d7;background:#f5faef;border-radius:16px}
+.skill-top{display:flex;align-items:baseline;justify-content:space-between;font-size:12px;font-weight:950;color:#4e8270;margin:0 3px 6px}
+.skill-top small{font-size:10px;font-weight:800;color:#83958a}
+.skill-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.skill-button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1px;min-height:57px;border-radius:13px;border:2px solid #e3dac2;background:#fffdf6;box-shadow:0 2px 0 #e8ddc5;font-size:12px;font-weight:950;color:#635842}
+.skill-button .skill-icon{font-size:21px;line-height:1.1}.skill-button small{font-size:9px;font-weight:850;color:#8a9b90}
+.skill-button:disabled{opacity:.54;box-shadow:none}.skill-button.used-skill{background:#eaede7;filter:saturate(.55)}
+.scene.boss-scene{border-color:#ffe5ad;box-shadow:0 5px 0 #dbc891}
+.scene.boss-scene .enemy-char{right:2%;width:137px;height:151px;bottom:11px}
+.boss-art{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 5px 4px #71573b55)}
+.boss-monster .char-label{color:#91611c;background:#ffefc1}
+.boss-trophy{font-size:15px;font-weight:950;color:#b08029;margin-top:12px}
+.boss-retry{margin:10px auto 0}.boss-album{font-weight:950;color:#956b30;background:#fff1c9;padding:9px;border-radius:12px;text-align:center;font-size:12px}
+.sticker-cell.shiny{border-color:#edc35b;background:linear-gradient(140deg,#fff1ad,#ffe4e9,#dceafc,#fff1ad);box-shadow:0 0 0 2px #ffebae,0 3px 0 #dfc082}
+.sticker-cell.shiny .sticker-stamp{background:#ffdb7e;color:#785019}
+.stage-card .boss-won{display:block;color:#c09244;font-size:10px;font-weight:950;margin-top:4px}
+@media(max-height:770px){.skill-area{margin:6px 0 3px;padding:6px}.skill-button{min-height:49px}.skill-button .skill-icon{font-size:18px}.skill-top{margin-bottom:4px}}
+@media(max-width:350px){.skill-grid{gap:4px}.skill-button{font-size:11px}.scene.boss-scene .enemy-char{right:0;width:119px;height:142px}}
 </style>
 </head>
 
@@ -123,6 +143,14 @@
   <div class="character hero-char" id="hero"></div><div class="character enemy-char" id="enemy"></div><div class="bubble" id="sceneBubble">⚔️ こうげき！</div>
  </div>
  <div class="turn-strip"><span class="turn-tag" id="turnTag">⚔️ あなたの ばん</span><span class="try-mark" id="tryMark">チャンス ２かい</span></div>
+  <div class="skill-area" id="skillArea" aria-label="おたすけスキル">
+   <div class="skill-top">✨ おたすけスキル <small>それぞれ 1かい だけ！</small></div>
+   <div class="skill-grid">
+    <button type="button" class="skill-button" id="skillShield"><span class="skill-icon">🛡️</span><span>まもる</span><small id="skillShieldState">1かい</small></button>
+    <button type="button" class="skill-button" id="skillInsight"><span class="skill-icon">🍒</span><span>ひらめき</span><small id="skillInsightState">1かい</small></button>
+    <button type="button" class="skill-button" id="skillPotion"><span class="skill-icon">🧪</span><span>かいふく</span><small id="skillPotionState">1かい</small></button>
+   </div>
+  </div>
  <div class="battle-ui">
   <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき</span><span class="math-mini" id="mathMini">せいかいで 3 ダメージ</span></div>
   <div class="math-q" id="mathQuestion" aria-live="polite">5 ＋ 3 ＝ ？</div><p class="math-sub" id="mathSub">けいさんして こうげきしよう！</p>
@@ -134,19 +162,19 @@
  <div class="assist"><span class="assist-note">１かいめの ミスは ペナルティなし<br>２かいめの ミスで こうどう しっぱい</span></div>
  <button class="secondary" id="quit">はじめに もどる</button>
 </section>
-<section class="page clear" id="clearScreen" hidden><p class="kicker">すべての モンスターに かった！</p><div class="medal" aria-hidden="true">🏆</div><h1 class="clear-title">ぼうけん クリア！</h1><p class="clear-copy" id="clearCopy">よく がんばったね！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num">５ たい！</div><div class="trophy-small" id="clearMaths"></div></div><div class="reward-summary" id="clearReward" role="status"></div><button class="main-button" id="retry">おなじ コースで あそぶ ↻</button><button class="secondary" id="home">コースを えらぶ</button></section>
-<section class="page clear gameover" id="overScreen" hidden><p class="kicker">また ちょうせん できるよ！</p><div class="medal" aria-hidden="true">💫</div><h1 class="clear-title">ざんねん！</h1><p class="clear-copy" id="overCopy">ゆうしゃの HPが 0に なったよ。<br>つぎこそ クリアしよう！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num" id="overCount">0 たい</div><div class="trophy-small" id="overMaths"></div></div><div class="reward-summary" id="overReward" role="status"></div><button class="main-button" id="restart">もういちど ちょうせん！ ↻</button><button class="secondary" id="overHome">コースを えらぶ</button></section>
+<section class="page clear" id="clearScreen" hidden><p class="kicker">すべての モンスターに かった！</p><div class="medal" aria-hidden="true">🏆</div><h1 class="clear-title">ぼうけん クリア！</h1><p class="clear-copy" id="clearCopy">よく がんばったね！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num">５ たい！</div><div class="trophy-small" id="clearMaths"></div><div class="boss-trophy" id="clearBossTrophy" hidden></div></div><div class="reward-summary" id="clearReward" role="status"></div><button class="main-button" id="retry">おなじ コースで あそぶ ↻</button><button class="secondary" id="home">コースを えらぶ</button></section>
+<section class="page clear gameover" id="overScreen" hidden><p class="kicker">また ちょうせん できるよ！</p><div class="medal" aria-hidden="true">💫</div><h1 class="clear-title">ざんねん！</h1><p class="clear-copy" id="overCopy">ゆうしゃの HPが 0に なったよ。<br>つぎこそ クリアしよう！</p><div class="trophy-panel"><div class="trophy-small">たおした モンスター</div><div class="trophy-num" id="overCount">0 たい</div><div class="trophy-small" id="overMaths"></div></div><div class="reward-summary" id="overReward" role="status"></div><button class="main-button boss-retry" id="bossRetry" hidden>🐉 ボスから もういちど！</button><button class="secondary" id="restart">さいしょから ちょうせん ↻</button><button class="secondary" id="overHome">コースを えらぶ</button></section>
 <div class="sticker-overlay" id="stickerOverlay" hidden>
  <section class="sticker-sheet" role="dialog" aria-modal="true" aria-labelledby="stickerTitle">
   <div class="sticker-top"><h2 id="stickerTitle">📒 わくわく シールちょう</h2><button class="sticker-close" id="closeStickers" type="button" aria-label="とじる">×</button></div>
-  <div class="sticker-progress" id="stickerProgress"></div><div class="sticker-grid" id="stickerGrid"></div>
+  <div class="sticker-progress" id="stickerProgress"></div><div class="boss-album" id="bossAlbum" hidden></div><div class="sticker-grid" id="stickerGrid"></div>
   <p class="sticker-note">モンスターを 5たい たおすごとに あたらしい シール！<br>まけても たおした ぶんは のこるよ。<br>この スマホの ブラウザに きろくするよ。</p>
  </section>
 </div>
 </main>
 <script>
 
-/* けいさんクエスト v0.4 - real sticker collection artworks, retains v0.3 game state */
+/* けいさんクエスト v0.5 - boss battle and 3 optional help skills; keeps v0.4 content and sticker data */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const STAGES=[
@@ -165,9 +193,12 @@ const MONSTERS=[
  {name:'きのこっこ',max:8,kind:1},
  {name:'もこもこ',max:9,kind:2},
  {name:'はっぱん',max:9,kind:3},
- {name:'おおきな ぷに',max:12,kind:4}
+ {name:'もりの ドラゴン',max:15,kind:4}
 ];
 const HERO_MAX=16;
+const BOSS_INDEX=MONSTERS.length-1;
+const bossMinHP=12; // Enter the boss at 12 HP minimum; retries restore this checkpoint.
+
 const heroSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="137" rx="40" ry="7" fill="#467d6966"/><path d="M37 88 Q17 114 31 131 L86 131 Q96 111 82 87 Z" fill="#3f9c94" stroke="#2b7275" stroke-width="3"/><path d="M43 111 L38 135 M78 111 L84 135" stroke="#675f64" stroke-width="12" stroke-linecap="round"/><rect x="42" y="78" width="39" height="34" rx="9" fill="#e5b775" stroke="#b37b50" stroke-width="3"/><path d="M60 78 L60 111 M46 92 L75 92" stroke="#f8e9a2" stroke-width="5" stroke-linecap="round"/><rect x="43" y="31" width="37" height="54" rx="18" fill="#ffdab1" stroke="#a67868" stroke-width="3"/><path d="M39 52 Q36 21 61 20 Q83 21 84 52 Q73 40 57 42 Q46 48 39 52" fill="#6c554b"/><path d="M36 49 Q39 13 60 13 Q85 14 85 48" fill="#5277b5" stroke="#355989" stroke-width="3"/><rect x="33" y="44" width="54" height="8" rx="4" fill="#f2d38c"/><circle cx="54" cy="62" r="2.7" fill="#514b43"/><circle cx="70" cy="62" r="2.7" fill="#514b43"/><path d="M57 70 Q62 74 68 70" fill="none" stroke="#a96c68" stroke-width="2.5" stroke-linecap="round"/><path d="M29 91 L15 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M88 93 L99 103" stroke="#ffdab1" stroke-width="10" stroke-linecap="round"/><path d="M101 101 L110 44" stroke="#9aaeb7" stroke-width="7" stroke-linecap="round"/><path d="M105 43 L110 24 L116 42" fill="#f7fbfd" stroke="#8aabb2" stroke-width="2"/><path d="M96 96 L116 99" stroke="#d5ad6b" stroke-width="6" stroke-linecap="round"/></svg>`;
 function monsterSVG(kind){
  const colors=['#79d4b5','#efb477','#b3c6f4','#aad884','#e2a0ca'];const c=colors[kind]||colors[0];
@@ -179,7 +210,7 @@ function monsterSVG(kind){
  return `<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="139" rx="39" ry="7" fill="#467d6955"/>${extras}<path d="M20 106 Q20 74 39 65 Q42 39 61 49 Q86 39 89 68 Q103 81 101 107 Q96 131 63 131 Q27 131 20 106 Z" fill="${c}" stroke="#598b83" stroke-width="3"/><ellipse cx="43" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="84" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="50" cy="90" rx="4.5" ry="6" fill="#32464d"/><ellipse cx="76" cy="90" rx="4.5" ry="6" fill="#32464d"/><circle cx="51" cy="88" r="1.5" fill="#fff"/><circle cx="77" cy="88" r="1.5" fill="#fff"/><path d="M58 104 Q63 111 69 104" fill="none" stroke="#52646b" stroke-width="3" stroke-linecap="round"/><path d="M31 83 Q39 69 50 70" stroke="#fff9" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`;
 }
 const potionSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="137" rx="35" ry="7" fill="#467d6955"/><path d="M45 21 H75 V48 Q98 64 94 96 Q91 129 60 130 Q29 129 26 96 Q21 64 45 48Z" fill="#e5f9ff" stroke="#5da1b5" stroke-width="5"/><path d="M33 86 Q43 77 55 84 Q71 93 89 81 L89 100 Q80 124 60 124 Q40 125 32 100Z" fill="#f187ac"/><rect x="42" y="15" width="36" height="16" rx="5" fill="#c78d56" stroke="#98683f" stroke-width="3"/><path d="M60 84 V109 M48 96 H72" stroke="#fff5f7" stroke-width="7" stroke-linecap="round"/><circle cx="43" cy="70" r="4" fill="#fff"/></svg>`;
-const state={phase:'title',stage:0,category:'plus',answerSetting:'auto',inputMode:false,inputValue:'',tried:new Set(),index:0,heroHP:16,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0};
+const state={phase:'title',stage:0,category:'plus',answerSetting:'auto',inputMode:false,inputValue:'',tried:new Set(),index:0,heroHP:16,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0};
 const pending=new Set();let audioContext=null;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function later(fn,ms){const id=setTimeout(()=>{pending.delete(id);fn()},reduce?Math.min(ms,30):ms);pending.add(id);return id}
@@ -190,7 +221,19 @@ function setStatus(message,kind=''){$('status').textContent=message;$('status').
 function updateBars(){const monster=MONSTERS[state.index];$('heroHpNum').textContent=state.heroHP+' / '+HERO_MAX;$('heroHpBar').style.width=100*state.heroHP/HERO_MAX+'%';$('enemyHpNum').textContent=state.enemyHP+' / '+monster.max;$('enemyHpBar').style.width=100*state.enemyHP/monster.max+'%'}
 function changeStages(){const fragment=document.createDocumentFragment();MONSTERS.forEach((_,i)=>{const dot=document.createElement('div');dot.className='stage-dot'+(i<state.index?' done':i===state.index?' current':'');fragment.append(dot)});$('stages').replaceChildren(fragment);$('stageCounter').textContent=(state.index+1)+' / 5 たい'}
 function makeLabel(str){const s=document.createElement('div');s.className='char-label';s.textContent=str;return s}
-function updateScene(){const m=MONSTERS[state.index];$('enemyName').textContent=m.name;$('enemy').innerHTML=monsterSVG(m.kind);$('enemy').append(makeLabel(m.name));$('enemyHpBox').hidden=false;$('enemy').className='character enemy-char';$('hero').className='character hero-char';$('sceneBubble').textContent='⚔️ けいさんで たたかおう！';updateBars()}
+function updateScene(){
+ const m=MONSTERS[state.index],boss=state.index===BOSS_INDEX;
+ $('enemyName').textContent=boss?'ドラゴン':m.name;
+ $('enemy').replaceChildren();
+ if(boss){
+  const art=document.createElement('img');art.className='boss-art';art.alt='もりの ドラゴン';art.src=STICKER_IMAGE_URLS[3];$('enemy').append(art);
+ }else{$('enemy').innerHTML=monsterSVG(m.kind)}
+ if(!boss)$('enemy').append(makeLabel(m.name));$('enemyHpBox').hidden=false;
+ $('enemy').className='character enemy-char'+(boss?' boss-monster':'');
+ $('hero').className='character hero-char';$('scene').classList.toggle('boss-scene',boss);
+ $('stageName').textContent=STAGES[state.stage].icon+' '+STAGES[state.stage].name+(boss?'　🐉 ボス！':'');
+ $('sceneBubble').textContent=boss?'🐉 つよい ボスが あらわれた！':'⚔️ けいさんで たたかおう！';updateBars();
+}
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
 function options(correct){const pool=new Set([correct]);const deltas=shuffle([-1,1,-2,2,-3,3,-4,4,-5,5]);for(const d of deltas){const x=correct+d;if(x>=0&&x<=25)pool.add(x);if(pool.size>=3)break}return shuffle([...pool].slice(0,3))}
 /* Stages fix BOTH math domain and problem shape, independently of enemy HP. */
@@ -349,6 +392,40 @@ function showHint(){
  requestAnimationFrame(()=>{$('hintPanel').scrollIntoView({block:'nearest',behavior:reduce?'auto':'smooth'})});
 }
 
+/* Skills are once per expedition. Their effect and usage are visible on screen. */
+function updateSkillsUI(){
+ const config=[['Shield','shield',state.turn==='defend'],['Insight','insight',true],['Potion','potion',state.turn==='attack'&&state.heroHP<HERO_MAX]];
+ for(const [id,key,allowed] of config){
+  const used=state.skillsUsed[key],el=$('skill'+id);
+  el.disabled=!!used||!allowed||state.locked||state.phase!=='game';
+  el.classList.toggle('used-skill',!!used);
+  $('skill'+id+'State').textContent=used?'つかった':allowed?'1かい':'いまは ×';
+ }
+}
+function useSkill(which){
+ if(state.phase!=='game'||state.locked||!state.question||state.skillsUsed[which])return;
+ if(which==='shield'){
+  if(state.turn!=='defend')return;
+  state.skillsUsed.shield=true;state.locked=true;updateSkillsUI();
+  $('hintPanel').hidden=true;$('sceneBubble').textContent='🛡️ まもりの たて！';animateEffect('ダメージ 0','guard');
+  setStatus('だいじょうぶ！ てきの こうげきを ふせいだよ！','good');sound('good');
+  later(()=>questionFor('attack'),750);
+ }else if(which==='insight'){
+  state.skillsUsed.insight=true;showHint();updateSkillsUI();
+  setStatus('🍒 ひらめき！ ずを みて かんがえよう！','good');sound('good');
+ }else if(which==='potion'){
+  if(state.turn!=='attack'||state.heroHP===HERO_MAX)return;
+  state.skillsUsed.potion=true;
+  questionFor('skillHeal');sound('tap');
+ }
+}
+function retryBoss(){
+ if(!state.bossCheckpoint||state.index!==BOSS_INDEX)return;
+ cancelPending();state.bossRetries++;state.heroHP=state.bossCheckpoint.heroHP;
+ state.skillsUsed={...state.bossCheckpoint.skillsUsed};state.locked=false;state.index=BOSS_INDEX;
+ $('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));
+ show('game');nextMonster();sound('tap');
+}
 function renderKeypad(){
  $('keypad').replaceChildren();
  for(const key of ['1','2','3','4','5','6','7','8','9','けす','0','OK']){
@@ -365,18 +442,18 @@ function renderKeypad(){
 }
 function questionFor(turn){
  state.turn=turn;state.question=uniqueQuestion();state.misses=0;state.locked=false;state.inputValue='';state.tried=new Set();$('hintPanel').hidden=true;
- const details={attack:['⚔️ あなたの ばん','⚔️ こうげき','せいかいで 3 ダメージ','けいさんで モンスターを こうげき！'],defend:['🛡️ てきの ばん','🛡️ ぼうぎょ','せいかいで 1 ダメージ','せいかいすると ダメージを へらせる！'],potion:['🧪 かいふく','🧪 ポーション','せいかいで HP＋4','せいかいすると HPが かいふく！']}[turn];
+ const details={attack:['⚔️ あなたの ばん','⚔️ こうげき','せいかいで 3 ダメージ','けいさんで モンスターを こうげき！'],defend:['🛡️ てきの ばん','🛡️ ぼうぎょ','せいかいで 1 ダメージ','せいかいすると ダメージを へらせる！'],potion:['🧪 かいふく','🧪 ポーション','せいかいで HP＋4','せいかいすると HPが かいふく！'],skillHeal:['🧪 おたすけ','🧪 かいふくスキル','せいかいで HP＋5','せいかいすると HPが 5 かいふく！']}[turn];
  $('turnTag').textContent=details[0];$('turnTag').className='turn-tag '+(turn==='defend'?'foe':turn==='potion'?'potion':'');$('tryMark').textContent='チャンス ２かい';$('mathKind').textContent=details[1];$('mathKind').className='math-kind'+(turn==='potion'?' potion':'');$('mathMini').textContent=details[2];$('mathQuestion').textContent=state.question.display;$('mathSub').textContent=details[3];
  state.inputMode=state.answerSetting==='input'||(state.answerSetting==='auto'&&STAGES[state.stage].entry);
  $('choices').hidden=state.inputMode;$('entryPanel').hidden=!state.inputMode;
  $('choices').replaceChildren();state.choices=options(state.question.answer);
  if(state.inputMode){$('typedAnswer').textContent='？';renderKeypad()}
  else for(const n of state.choices){const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=n;b.setAttribute('aria-label',n+' を えらぶ');b.addEventListener('click',()=>choose(n,b));$('choices').append(b)}
- setStatus(state.inputMode?'すうじを いれて OKを おしてね！':'すうじを えらぼう！');$('sceneBubble').textContent=turn==='attack'?'⚔️ あなたの こうげき！':turn==='defend'?'🛡️ てきが こうげきしてくる！':'🧪 ポーションを つかおう！';
+ setStatus(state.inputMode?'すうじを いれて OKを おしてね！':'すうじを えらぼう！');$('sceneBubble').textContent=turn==='attack'?'⚔️ あなたの こうげき！':turn==='defend'?'🛡️ てきが こうげきしてくる！':'🧪 ポーションを つかおう！';updateSkillsUI();
 }
 function animateEffect(label,kind='enemy'){const el=document.createElement('div');el.className='effect'+(kind==='heal'?' heal':kind==='hero'?' hero-damage':kind==='guard'?' guard':'');el.textContent=label;$('scene').append(el);later(()=>el.remove(),820)}
 function lockChoices(button){
- state.locked=true;[...$('choices').children,...$('keypad').children].forEach(b=>b.disabled=true);if(button)button.classList.add('correct');
+ state.locked=true;updateSkillsUI();[...$('choices').children,...$('keypad').children].forEach(b=>b.disabled=true);if(button)button.classList.add('correct');
 }
 function choose(num,button){if(state.phase!=='game'||state.locked||!state.question||(button&&button.disabled))return;
  const q=state.question;
@@ -395,13 +472,17 @@ function resolveTurn(ok){if(state.phase!=='game')return;
  if(state.turn==='attack'){
   if(ok){const damage=Math.min(3,state.enemyHP);state.enemyHP=Math.max(0,state.enemyHP-damage);$('hero').classList.add('attacking');$('enemy').classList.add('hit');animateEffect('−'+damage);sound('hit');$('sceneBubble').textContent='✨ こうげき せいこう！';updateBars();}
   else{$('sceneBubble').textContent='こうげき しっぱい！'}
-  if(state.enemyHP<=0){recordMonsterDefeated();later(()=>{$('enemy').classList.remove('hit');$('enemy').classList.add('defeated');sound('win');$('sceneBubble').textContent='モンスターを たおした！'},430);later(nextAfterMonster,1220)}
+  if(state.enemyHP<=0){recordMonsterDefeated();if(state.index===BOSS_INDEX)recordBossVictory();later(()=>{$('enemy').classList.remove('hit');$('enemy').classList.add('defeated');sound('win');$('sceneBubble').textContent='モンスターを たおした！'},430);later(nextAfterMonster,1220)}
   else{later(()=>{$('hero').classList.remove('attacking');$('enemy').classList.remove('hit');questionFor('defend')},900)}
  }else if(state.turn==='defend'){
   const damage=ok?1:3;state.heroHP=Math.max(0,state.heroHP-damage);$('hero').classList.add('ouch');animateEffect('−'+damage,'hero');$('sceneBubble').textContent=ok?'🛡️ ぼうぎょ！ ダメージを へらした！':'💥 ぼうぎょ しっぱい！';updateBars();sound('hit');
   if(state.heroHP===0){later(gameOver,900)}else{later(()=>{$('hero').classList.remove('ouch');questionFor('attack')},1050)}
- }else{
-  if(ok){const healed=Math.min(4,HERO_MAX-state.heroHP);state.heroHP+=healed;animateEffect('＋'+healed+' ♥','heal');$('sceneBubble').textContent='💖 かいふく せいこう！';updateBars();sound('heal')}
+  }else if(state.turn==='skillHeal'){
+   if(ok){const healed=Math.min(5,HERO_MAX-state.heroHP);state.heroHP+=healed;animateEffect('＋'+healed+' ♥','heal');$('sceneBubble').textContent='💖 スキルで かいふく！';updateBars();sound('heal')}
+   else{$('sceneBubble').textContent='かいふく しっぱい！'}
+   later(()=>questionFor('defend'),850);
+  }else{
+   if(ok){const healed=Math.min(4,HERO_MAX-state.heroHP);state.heroHP+=healed;animateEffect('＋'+healed+' ♥','heal');$('sceneBubble').textContent='💖 かいふく せいこう！';updateBars();sound('heal')}
   else{$('sceneBubble').textContent='かいふく しっぱい！'}
   later(()=>{state.index++;travelToNext()},850);
  }
@@ -410,15 +491,23 @@ function nextAfterMonster(){if(state.index===MONSTERS.length-1){finish();return}
  if(state.index===1||state.index===3){potion()}else{state.index++;travelToNext()}}
 function potion(){$('enemy').className='character enemy-char';$('enemy').innerHTML=potionSVG;$('enemy').append(makeLabel('かいふくの くすり'));$('enemyName').textContent='ポーション';$('enemyHpBox').hidden=true;state.healUsed++;questionFor('potion')}
 function travelToNext(){$('scene').classList.add('walking');$('sceneBubble').textContent='🚶 つぎの モンスターへ！';later(nextMonster,700)}
-function nextMonster(){state.enemyHP=MONSTERS[state.index].max;$('scene').classList.remove('walking');$('stageName').textContent=STAGES[state.stage].icon+' '+STAGES[state.stage].name;updateScene();changeStages();questionFor('attack')}
-function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:HERO_MAX,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,inputValue:'',tried:new Set()});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
+function nextMonster(){
+ let gained=0;
+ if(state.index===BOSS_INDEX&&!state.bossCheckpoint){
+  const before=state.heroHP;state.heroHP=Math.max(bossMinHP,state.heroHP);gained=state.heroHP-before;
+  state.bossCheckpoint={heroHP:state.heroHP,skillsUsed:{...state.skillsUsed}};
+ }
+ state.enemyHP=MONSTERS[state.index].max;$('scene').classList.remove('walking');updateScene();changeStages();questionFor('attack');
+ if(gained){animateEffect('＋'+gained+' ♥','heal');setStatus('✨ ボスの まえに HPが かいふくしたよ！','good');}
+}
+function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:HERO_MAX,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,inputValue:'',tried:new Set(),skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
 function finish(){
  cancelPending();$('clearCopy').textContent=STAGES[state.stage].label+' の ぼうけん せいこう！';$('clearMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';
- $('clearReward').innerHTML=rewardMessage(true);show('clear');sound('win');
+ $('clearReward').innerHTML=rewardMessage(true);$('clearBossTrophy').hidden=false;$('clearBossTrophy').textContent='🐉 ボス しょうり！　この コース '+(bossWins[STAGES[state.stage].id]||0)+'かいめ';show('clear');sound('win');
 }
 function gameOver(){
  cancelPending();$('overCount').textContent=state.defeatedThisRun+' たい';$('overMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';
- $('overReward').innerHTML=rewardMessage(false);show('over');sound('wrong');
+ $('overReward').innerHTML=rewardMessage(false);$('bossRetry').hidden=!(state.index===BOSS_INDEX&&state.bossCheckpoint);show('over');sound('wrong');
 }
 const STICKERS=[
  ['🟢','ぷにスライム'],['🍄','きのこっこ'],['☁️','もこもこ'],['🐲','ドラゴン'],
@@ -451,6 +540,15 @@ function recordMonsterDefeated(){
   if(stickerData.points>=5){stickerData.points-=5;const next=STICKERS.findIndex((_,i)=>!stickerData.owned.includes(i));if(next!==-1){stickerData.owned.push(next);state.unlockedThisRun.push(next)}}
  }saveStickers();refreshStickerCount();
 }
+const BOSS_SAVE_KEY='keisan-quest-boss-wins-v05';
+function loadBossWins(){try{const data=JSON.parse(localStorage.getItem(BOSS_SAVE_KEY)||'{}');if(data&&typeof data==='object'&&!Array.isArray(data))return Object.fromEntries(STAGES.map(stage=>[stage.id,Math.max(0,Math.min(9999,Number(data[stage.id])||0))]));}catch(_){}return {}}
+const bossWins=loadBossWins();
+function recordBossVictory(){
+ const key=STAGES[state.stage].id;bossWins[key]=(bossWins[key]||0)+1;
+ try{localStorage.setItem(BOSS_SAVE_KEY,JSON.stringify(bossWins))}catch(_){}
+ if(!stickerData.owned.includes(3)){stickerData.owned.push(3);state.unlockedThisRun.push(3);saveStickers();refreshStickerCount()}
+ renderStageSelect();
+}
 function imageForSticker(i){return STICKER_IMAGE_URLS[i]||null}
 function rewardMessage(clear){
  let html='';
@@ -471,10 +569,10 @@ function renderStickers(){
   if(img){const art=document.createElement('img');art.className='sticker-art';art.src=img;art.alt=owned?name+'の シール':'まだ あつめていない シール';art.loading='lazy';cell.append(art)}
   else{const mark=document.createElement('span');mark.className='fallback-icon';mark.textContent=owned?emoji:'？';cell.append(mark)}
   const caption=document.createElement('small');caption.textContent=owned?name:'？？？';cell.append(caption);
-  const badge=document.createElement('span');badge.className='sticker-stamp';badge.textContent=owned?'GET!':'🔒';cell.append(badge);
+  const badge=document.createElement('span');badge.className='sticker-stamp';badge.textContent=owned?(i===3&&Object.values(bossWins).some(n=>n>0)?'✨ ボス！':'GET!'):'🔒';if(i===3&&owned&&Object.values(bossWins).some(n=>n>0))cell.classList.add('shiny');cell.append(badge);
   $('stickerGrid').append(cell);
  });
- $('stickerProgress').textContent=`${stickerData.owned.length} / ${STICKERS.length} まい ｜ つぎまで ${stickerData.points} / 5 たい`;
+ $('stickerProgress').textContent=`${stickerData.owned.length} / ${STICKERS.length} まい ｜ つぎまで ${stickerData.points} / 5 たい`;const total=Object.values(bossWins).reduce((a,b)=>a+b,0);$('bossAlbum').hidden=total===0;$('bossAlbum').textContent='🏆 ボスに '+total+'かい かったよ！';
 }
 function updateNextSticker(){
  const el=$('nextSticker');el.replaceChildren();
@@ -499,16 +597,17 @@ function renderStageSelect(){
  STAGES.forEach((stage,i)=>{if(stage.category!==state.category)return;const b=document.createElement('button');b.type='button';b.className='stage-card '+stage.id;
   const badge=(state.answerSetting==='input'||(state.answerSetting==='auto'&&stage.entry))?'じぶんで こたえる':'3たくで こたえる';
   b.innerHTML='<span class="emoji" aria-hidden="true">'+stage.icon+'</span><strong>'+stage.label+'</strong><small>'+stage.detail+'</small><span class="answer-badge">'+badge+'</span>';
-  b.addEventListener('click',()=>start(i));$('stageSelect').append(b)
+  if(bossWins[stage.id]){const won=document.createElement('span');won.className='boss-won';won.textContent='🏆 ボス '+bossWins[stage.id]+'かい';b.append(won)}b.addEventListener('click',()=>start(i));$('stageSelect').append(b)
  });
 }
 const METHOD_NAMES={auto:'おまかせ',choice:'3たく',input:'じぶんで こたえる'};
 function cycleAnswerSetting(){const modes=['auto','choice','input'];state.answerSetting=modes[(modes.indexOf(state.answerSetting)+1)%modes.length];$('methodSwitch').textContent=METHOD_NAMES[state.answerSetting]+' ▾';renderStageSelect()}
 for(const id of ['clearReward','overReward'])$(id).addEventListener('click',e=>{if(e.target.closest('[data-open-stickers]'))openStickers()});
 $('introHero').innerHTML=heroSVG;$('introEnemy').innerHTML=monsterSVG(0);renderStageSelect();refreshStickerCount();$('methodSwitch').addEventListener('click',cycleAnswerSetting);$('openStickers').addEventListener('click',openStickers);$('closeStickers').addEventListener('click',closeStickers);$('stickerOverlay').addEventListener('click',e=>{if(e.target===$('stickerOverlay'))closeStickers()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!$('stickerOverlay').hidden)closeStickers()});
-$('retry').addEventListener('click',()=>start(state.stage));$('restart').addEventListener('click',()=>start(state.stage));
+$('skillShield').addEventListener('click',()=>useSkill('shield'));$('skillInsight').addEventListener('click',()=>useSkill('insight'));$('skillPotion').addEventListener('click',()=>useSkill('potion'));$('bossRetry').addEventListener('click',retryBoss);
+ $('retry').addEventListener('click',()=>start(state.stage));$('restart').addEventListener('click',()=>start(state.stage));
 for(const id of ['quit','home','overHome'])$(id).addEventListener('click',()=>{cancelPending();show('title')});
 $('sound').addEventListener('click',()=>{state.soundOn=!state.soundOn;$('sound').textContent=state.soundOn?'♪ おと ON':'♪ おと OFF';$('sound').setAttribute('aria-pressed',String(state.soundOn));sound('tap')});
-if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,STAGES,MONSTERS,createQuestion,start,choose,questionFor,options,resolveTurn,gameOver,stickerData,recordMonsterDefeated,renderStickers});
+if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,STAGES,MONSTERS,createQuestion,start,choose,questionFor,options,resolveTurn,gameOver,stickerData,recordMonsterDefeated,renderStickers,useSkill,retryBoss,bossWins});
 })();
 </script></body></html>

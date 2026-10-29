@@ -153,6 +153,22 @@
  #gameScreen .scene{height:211px}
  #gameScreen .scene .bubble{font-size:10px;padding:5px 8px}
 }
+/* v0.6: interactive cherry course. Diagrams are code/CSS, not imported artwork. */
+.cherry-practice{margin:-2px 0 13px;padding:10px 11px 9px;border:2px solid #f1ddbd;border-radius:15px;background:linear-gradient(125deg,#fff8f0,#f5fbf1)}
+.cherry-practice-head{font-size:12px;font-weight:950;color:#a66c4b;text-align:center;margin-bottom:4px}
+.cherry-practice-body{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:center;gap:8px}
+.cherry-numberbond{display:flex;flex-direction:column;align-items:center;justify-content:center;min-width:0;height:94px}
+.bond-stem{width:35px;height:35px;border-radius:50%;border:2px solid #dfb16f;background:#f4d9ab;color:#5b4c35;display:grid;place-items:center;font-size:21px;font-weight:950}
+.cherry-numberbond svg{width:min(125px,100%);height:33px;margin-top:-1px}
+.bond-fruit{width:min(125px,100%);display:flex;justify-content:space-around;margin-top:-2px}
+.bond-fruit span{display:grid;place-items:center;border-radius:50%;width:36px;height:36px;background:#bae4d5;border:2px solid #89cdb2;font-size:19px;font-weight:950;color:#3c695c}
+.bond-fruit span+span{background:#f9d4b6;border-color:#efb585;color:#805c3e}
+.cherry-ten-box{text-align:center;min-width:0}.cherry-ten-caption{font-size:10px;color:#5b8475;font-weight:950;margin-bottom:5px}
+.cherry-ten-grid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:3px;border:2px solid #abc8b6;border-radius:9px;background:white;padding:4px;max-width:140px;margin:auto}
+.cherry-ten-dot{display:block;aspect-ratio:1;border-radius:5px;border:1px solid #d9e5da;background:#fff}
+.cherry-ten-dot.filled{background:#f2ba63;border-color:#dfa148}.cherry-ten-dot.added{background:#77c6a8;border-color:#50ab8d}
+.cherry-remaining{font-size:10px;color:#7c7763;font-weight:850;margin-top:5px;line-height:1.4;min-height:16px}
+@media(max-width:350px){.cherry-practice{padding:9px 7px}.cherry-practice-body{gap:4px}.bond-fruit span{width:32px;height:32px}.math-q{font-size:34px}}
 </style>
 </head>
 
@@ -187,6 +203,13 @@
  <div class="battle-ui">
   <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき</span><span class="math-mini" id="mathMini">せいかいで 3 ダメージ</span></div>
   <div class="math-q" id="mathQuestion" aria-live="polite">5 ＋ 3 ＝ ？</div><p class="math-sub" id="mathSub">けいさんして こうげきしよう！</p>
+  <div class="cherry-practice" id="cherryPractice" hidden aria-label="さくらんぼけいさんの ず">
+   <div class="cherry-practice-head" id="cherryPracticeHead">🍒 10を つくろう</div>
+   <div class="cherry-practice-body">
+    <div class="cherry-numberbond"><span class="bond-stem" id="bondStem">5</span><svg aria-hidden="true" viewBox="0 0 130 40"><path d="M65 3 Q40 15 27 36 M65 3 Q89 15 104 36" fill="none" stroke="#97c1aa" stroke-width="3.5" stroke-linecap="round"/></svg><div class="bond-fruit"><span id="bondLeft">？</span><span id="bondRight">？</span></div></div>
+    <div class="cherry-ten-box"><div class="cherry-ten-caption" id="cherryTenCaption">10の わく</div><div class="cherry-ten-grid" id="cherryTenGrid"></div><div class="cherry-remaining" id="cherryRemaining">まず 10を つくろう！</div></div>
+   </div>
+  </div>
   <div class="answer-grid" id="choices" role="group" aria-label="こたえを えらんでね"></div>
   <div id="entryPanel" hidden><output class="key-answer" id="typedAnswer">？</output><div class="keypad" id="keypad" role="group" aria-label="すうじの ボタン"></div></div>
   <p class="status" id="status" role="status" aria-live="polite">すうじを ひとつ えらんでね！</p>
@@ -207,7 +230,7 @@
 </main>
 <script>
 
-/* けいさんクエスト v0.5.1 - UI overlap fix; underlying v0.5 boss battle and 3 optional help skills; keeps v0.4 content and sticker data */
+/* けいさんクエスト v0.6 - add interactive cherry-number-bond course while preserving existing boss/skills/stickers and UI fixes. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const STAGES=[
@@ -215,6 +238,7 @@ const STAGES=[
  {id:'plus3',icon:'🍀',name:'みっつの たしざん',label:'みっつの たしざん',detail:'10まで・みっつの かず',category:'plus',kind:'plus3',entry:false},
  {id:'plusblank',icon:'🔎',name:'かくれた すうじ',label:'かくれた すうじ',detail:'□に はいる かず',category:'plus',kind:'plusblank',entry:false},
  {id:'pluscarry',icon:'☀️',name:'くりあがりの おか',label:'くりあがり',detail:'10を こえる たしざん',category:'plus',kind:'pluscarry',entry:true},
+ {id:'cherry',icon:'🍒',name:'さくらんぼの はらっぱ',label:'さくらんぼ けいさん',detail:'わけて 10を つくろう',category:'plus',kind:'cherry',entry:false},
  {id:'minus2',icon:'🍂',name:'ひきざんの もり',label:'ふたつの ひきざん',detail:'10まで・ふたつの かず',category:'minus',kind:'minus2',entry:false},
  {id:'minusblank',icon:'🗝️',name:'かくれた ひきざん',label:'かくれた すうじ',detail:'□に はいる かず',category:'minus',kind:'minusblank',entry:false},
  {id:'minusnocarry',icon:'💧',name:'みずべの ひきざん',label:'20まで',detail:'くりさがり なし',category:'minus',kind:'minusnocarry',entry:false},
@@ -243,7 +267,7 @@ function monsterSVG(kind){
  return `<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="62" cy="139" rx="39" ry="7" fill="#467d6955"/>${extras}<path d="M20 106 Q20 74 39 65 Q42 39 61 49 Q86 39 89 68 Q103 81 101 107 Q96 131 63 131 Q27 131 20 106 Z" fill="${c}" stroke="#598b83" stroke-width="3"/><ellipse cx="43" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="84" cy="105" rx="11" ry="6" fill="#f9c1b5" opacity=".7"/><ellipse cx="50" cy="90" rx="4.5" ry="6" fill="#32464d"/><ellipse cx="76" cy="90" rx="4.5" ry="6" fill="#32464d"/><circle cx="51" cy="88" r="1.5" fill="#fff"/><circle cx="77" cy="88" r="1.5" fill="#fff"/><path d="M58 104 Q63 111 69 104" fill="none" stroke="#52646b" stroke-width="3" stroke-linecap="round"/><path d="M31 83 Q39 69 50 70" stroke="#fff9" stroke-width="6" stroke-linecap="round" fill="none"/></svg>`;
 }
 const potionSVG=`<svg viewBox="0 0 120 145" aria-hidden="true" xmlns="http://www.w3.org/2000/svg"><ellipse cx="60" cy="137" rx="35" ry="7" fill="#467d6955"/><path d="M45 21 H75 V48 Q98 64 94 96 Q91 129 60 130 Q29 129 26 96 Q21 64 45 48Z" fill="#e5f9ff" stroke="#5da1b5" stroke-width="5"/><path d="M33 86 Q43 77 55 84 Q71 93 89 81 L89 100 Q80 124 60 124 Q40 125 32 100Z" fill="#f187ac"/><rect x="42" y="15" width="36" height="16" rx="5" fill="#c78d56" stroke="#98683f" stroke-width="3"/><path d="M60 84 V109 M48 96 H72" stroke="#fff5f7" stroke-width="7" stroke-linecap="round"/><circle cx="43" cy="70" r="4" fill="#fff"/></svg>`;
-const state={phase:'title',stage:0,category:'plus',answerSetting:'auto',inputMode:false,inputValue:'',tried:new Set(),index:0,heroHP:16,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0};
+const state={phase:'title',stage:0,category:'plus',answerSetting:'auto',inputMode:false,inputValue:'',tried:new Set(),cherryStep:0,index:0,heroHP:16,enemyHP:7,turn:'attack',question:null,choices:[],locked:false,misses:0,correctCount:0,wrongCount:0,soundOn:false,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0};
 const pending=new Set();let audioContext=null;const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
 function later(fn,ms){const id=setTimeout(()=>{pending.delete(id);fn()},reduce?Math.min(ms,30):ms);pending.add(id);return id}
@@ -269,10 +293,39 @@ function updateScene(){
 }
 function shuffle(a){for(let i=a.length-1;i>0;i--){const j=rnd(0,i);[a[i],a[j]]=[a[j],a[i]]}return a}
 function options(correct){const pool=new Set([correct]);const deltas=shuffle([-1,1,-2,2,-3,3,-4,4,-5,5]);for(const d of deltas){const x=correct+d;if(x>=0&&x<=25)pool.add(x);if(pool.size>=3)break}return shuffle([...pool].slice(0,3))}
+function activeAnswer(){const q=state.question;return q?.cherry&&state.cherryStep===0?q.cherry.need:q.answer}
+function renderCherryDiagram(){
+ const q=state.question;if(!q?.cherry){$('cherryPractice').hidden=true;return}
+ $('cherryPractice').hidden=false;
+ const [a,b]=q.parts,filled=state.cherryStep>0;
+ $('bondStem').textContent=b;$('bondLeft').textContent=filled?q.cherry.need:'？';$('bondRight').textContent=filled?q.cherry.rest:'？';
+ $('cherryPracticeHead').textContent=filled?'🍒 '+b+' は '+q.cherry.need+' と '+q.cherry.rest:'🍒 '+b+'を わけて 10に しよう！';
+ $('cherryTenCaption').textContent=filled?a+' ＋ '+q.cherry.need+' ＝ 10':'あと いくつで 10？';
+ const frame=$('cherryTenGrid');frame.replaceChildren();
+ for(let i=0;i<10;i++){const dot=document.createElement('span');dot.className='cherry-ten-dot'+(i<a?' filled':filled?' added':'');frame.append(dot)}
+ $('cherryRemaining').textContent=filled?'のこり '+q.cherry.rest+'を たそう！':a+'こ あるよ';
+}
+function renderQuestionAnswers(){
+ const q=state.question,first=q.cherry&&state.cherryStep===0;
+ $('mathQuestion').textContent=q.cherry?(first?`${q.parts[0]} ＋ □ ＝ 10`:`10 ＋ ${q.cherry.rest} ＝ ？`):q.display;
+ $('mathSub').textContent=q.cherry?(first?`${q.parts[0]} ＋ ${q.parts[1]}。 ${q.parts[1]}を ふたつに わけよう！`:'10に したら、のこりを たそう！'):
+  ({attack:'けいさんで モンスターを こうげき！',defend:'せいかいすると ダメージを へらせる！',potion:'せいかいすると HPが かいふく！',skillHeal:'せいかいすると HPが 5 かいふく！'})[state.turn];
+ renderCherryDiagram();$('choices').replaceChildren();state.choices=options(activeAnswer());
+ $('choices').hidden=state.inputMode;$('entryPanel').hidden=!state.inputMode;
+ if(state.inputMode){$('typedAnswer').textContent='？';renderKeypad()}
+ else for(const n of state.choices){const btn=document.createElement('button');btn.type='button';btn.className='answer';btn.textContent=n;btn.setAttribute('aria-label',n+' を えらぶ');btn.addEventListener('click',()=>choose(n,btn));$('choices').append(btn)}
+}
+function advanceCherryStep(){
+ if(state.phase!=='game')return;
+ state.cherryStep=1;state.locked=false;state.inputValue='';state.tried=new Set();$('hintPanel').hidden=true;
+ renderQuestionAnswers();updateSkillsUI();$('tryMark').textContent=state.misses?'あと １かい':'チャンス ２かい';
+ setStatus('🍒 できた！ つぎは のこりを たそう！','good');
+}
+
 /* Stages fix BOTH math domain and problem shape, independently of enemy HP. */
 function createQuestion(stageIndex){
  const kind=STAGES[stageIndex].kind;
- let a,b,c,op,answer,display,parts,pattern=0;
+ let a,b,c,op,answer,display,parts,pattern=0,cherry=null;
  if(kind==='mix'){
   const pick=rnd(0,5);
   if(pick===0||pick===1){
@@ -296,6 +349,11 @@ function createQuestion(stageIndex){
  }else if(kind==='plus3'){
   do{a=rnd(1,6);b=rnd(1,5);c=rnd(1,5)}while(a+b+c>10);
   op='++';pattern=2;parts=[a,b,c];answer=a+b+c;display=`${a} ＋ ${b} ＋ ${c} ＝ ？`;
+ }else if(kind==='cherry'){
+  // Each cherry problem is a real crossing-ten sum: first make 10, then add the rest.
+  do{a=rnd(6,9);b=rnd(2,9)}while(a+b<=10||a+b>18);
+  op='+';parts=[a,b];answer=a+b;display=`${a} ＋ ${b} ＝ ？`;
+  cherry={need:10-a,rest:b-(10-a)};
  }else if(kind==='pluscarry'){
   do{a=rnd(4,9);b=rnd(2,9)}while(a+b<=10||a+b>18);
   op='+';parts=[a,b];answer=a+b;display=`${a} ＋ ${b} ＝ ？`;
@@ -308,7 +366,7 @@ function createQuestion(stageIndex){
  }else if(kind==='minusborrow'){
   a=rnd(11,18);b=rnd(a%10+1,9);op='−';parts=[a,b];answer=a-b;display=`${a} − ${b} ＝ ？`;
  }
- return {display,answer,op,parts,pattern,mode:kind};
+ return {display,answer,op,parts,pattern,mode:kind,cherry};
 }
 function uniqueQuestion(){let q;for(let i=0;i<90;i++){q=createQuestion(state.stage);if(!state.seen.has(q.display))break}state.seen.add(q.display);return q}
 function addHintStep(label,formula){
@@ -372,7 +430,18 @@ function showHint(){
  $('hintTitle').textContent='🍒 ずで かんがえよう！';
  const [a,b,c]=q.parts;
  let note='ずを みて、もういちど かんがえよう！';
- if(q.pattern===2){
+  if(q.cherry){
+   if(state.cherryStep===0){
+    drawTenFrame(Array.from({length:10},(_,i)=>i<a?'gold':''),`${a}こ あるよ。10の わくの あいてる ところを かぞえよう！`);
+    addExtraDots(b,'mint',`${b}こ から つかうよ`);
+    note='まず 10の わくを いっぱいに しよう！';
+   }else{
+    drawCherry(b,q.cherry.need,q.cherry.rest,`${b}を ふたつに わけたよ`);
+    drawTenFrame(Array.from({length:10},(_,i)=>i<a?'gold':'mint'),`${a} ＋ ${q.cherry.need} ＝ 10`);
+    addExtraDots(q.cherry.rest,'gold','のこりを たしてね');
+    note='10に のこりの かずを たしてみよう！';
+   }
+  }else if(q.pattern===2){
   const sub=q.op==='--',sign=sub?'−':'＋',mid=sub?a-b:a+b;
   addHintStep('① まず ふたつを けいさん',`${a} ${sign} ${b} ＝ ${mid}`);
   drawTenFrame(Array.from({length:10},(_,i)=>i<Math.min(mid,10)?'mint':''),'ここまでで '+mid+'こ');
@@ -474,14 +543,11 @@ function renderKeypad(){
  }
 }
 function questionFor(turn){
- state.turn=turn;state.question=uniqueQuestion();state.misses=0;state.locked=false;state.inputValue='';state.tried=new Set();$('hintPanel').hidden=true;
+ state.turn=turn;state.question=uniqueQuestion();state.misses=0;state.locked=false;state.inputValue='';state.tried=new Set();state.cherryStep=0;$('hintPanel').hidden=true;
  const details={attack:['⚔️ あなたの ばん','⚔️ こうげき','せいかいで 3 ダメージ','けいさんで モンスターを こうげき！'],defend:['🛡️ てきの ばん','🛡️ ぼうぎょ','せいかいで 1 ダメージ','せいかいすると ダメージを へらせる！'],potion:['🧪 かいふく','🧪 ポーション','せいかいで HP＋4','せいかいすると HPが かいふく！'],skillHeal:['🧪 おたすけ','🧪 かいふくスキル','せいかいで HP＋5','せいかいすると HPが 5 かいふく！']}[turn];
  $('turnTag').textContent=details[0];$('turnTag').className='turn-tag '+(turn==='defend'?'foe':turn==='potion'?'potion':'');$('tryMark').textContent='チャンス ２かい';$('mathKind').textContent=details[1];$('mathKind').className='math-kind'+(turn==='potion'?' potion':'');$('mathMini').textContent=details[2];$('mathQuestion').textContent=state.question.display;$('mathSub').textContent=details[3];
  state.inputMode=state.answerSetting==='input'||(state.answerSetting==='auto'&&STAGES[state.stage].entry);
- $('choices').hidden=state.inputMode;$('entryPanel').hidden=!state.inputMode;
- $('choices').replaceChildren();state.choices=options(state.question.answer);
- if(state.inputMode){$('typedAnswer').textContent='？';renderKeypad()}
- else for(const n of state.choices){const b=document.createElement('button');b.type='button';b.className='answer';b.textContent=n;b.setAttribute('aria-label',n+' を えらぶ');b.addEventListener('click',()=>choose(n,b));$('choices').append(b)}
+ renderQuestionAnswers();
  setStatus(state.inputMode?'すうじを いれて OKを おしてね！':'すうじを えらぼう！');$('sceneBubble').textContent=turn==='attack'?'⚔️ あなたの こうげき！':turn==='defend'?'🛡️ てきが こうげきしてくる！':'🧪 ポーションを つかおう！';updateSkillsUI();
 }
 function animateEffect(label,kind='enemy'){const el=document.createElement('div');el.className='effect'+(kind==='heal'?' heal':kind==='hero'?' hero-damage':kind==='guard'?' guard':'');el.textContent=label;$('scene').append(el);later(()=>el.remove(),820)}
@@ -489,15 +555,19 @@ function lockChoices(button){
  state.locked=true;updateSkillsUI();[...$('choices').children,...$('keypad').children].forEach(b=>b.disabled=true);if(button)button.classList.add('correct');
 }
 function choose(num,button){if(state.phase!=='game'||state.locked||!state.question||(button&&button.disabled))return;
- const q=state.question;
- if(num!==q.answer){state.misses++;state.wrongCount++;sound('wrong');
+ const q=state.question,correct=activeAnswer();
+ if(num!==correct){state.misses++;state.wrongCount++;sound('wrong');
   if(button){button.classList.remove('wrong');void button.offsetWidth;button.classList.add('wrong')}
   if(state.misses===1){
    if(button){button.disabled=true;button.classList.add('used');button.setAttribute('aria-label',num+' は ちがうよ。もう えらべない')}
    else{state.inputValue='';$('typedAnswer').textContent='？'}
    showHint();$('tryMark').textContent='あと １かい';setStatus('おしい！ ヒントを みて もういっかい！','bad');return;
   }
-  lockChoices();setStatus('せいかいは '+q.answer+'。こんかいは しっぱい！','bad');$('sceneBubble').textContent='あれれ！ しっぱい！';later(()=>resolveTurn(false),950);return;
+  lockChoices();setStatus('せいかいは '+correct+'。こんかいは しっぱい！','bad');$('sceneBubble').textContent='あれれ！ しっぱい！';later(()=>resolveTurn(false),950);return;
+ }
+ if(q.cherry&&state.cherryStep===0){
+  lockChoices(button);sound('good');setStatus(`${q.parts[0]} ＋ ${q.cherry.need} ＝ 10！`, 'good');
+  later(advanceCherryStep,360);return;
  }
  lockChoices(button);state.correctCount++;sound('good');setStatus('せいかい！ よく できたね！');later(()=>resolveTurn(true),260);
 }
@@ -533,7 +603,7 @@ function nextMonster(){
  state.enemyHP=MONSTERS[state.index].max;$('scene').classList.remove('walking');updateScene();changeStages();questionFor('attack');
  if(gained){animateEffect('＋'+gained+' ♥','heal');setStatus('✨ ボスの まえに HPが かいふくしたよ！','good');}
 }
-function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:HERO_MAX,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,inputValue:'',tried:new Set(),skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
+function start(stage=state.stage){cancelPending();Object.assign(state,{phase:'title',stage,index:0,heroHP:HERO_MAX,enemyHP:MONSTERS[0].max,turn:'attack',question:null,locked:false,misses:0,correctCount:0,wrongCount:0,seen:new Set(),healUsed:0,unlockedThisRun:[],defeatedThisRun:0,inputValue:'',tried:new Set(),cherryStep:0,skillsUsed:{shield:false,insight:false,potion:false},bossCheckpoint:null,bossRetries:0});$('hero').innerHTML=heroSVG;$('hero').append(makeLabel('ゆうしゃ'));show('game');nextMonster();sound('tap')}
 function finish(){
  cancelPending();$('clearCopy').textContent=STAGES[state.stage].label+' の ぼうけん せいこう！';$('clearMaths').textContent='せいかい '+state.correctCount+'もん ／ ミス '+state.wrongCount+'かい';
  $('clearReward').innerHTML=rewardMessage(true);$('clearBossTrophy').hidden=false;$('clearBossTrophy').textContent='🐉 ボス しょうり！　この コース '+(bossWins[STAGES[state.stage].id]||0)+'かいめ';show('clear');sound('win');
@@ -641,6 +711,6 @@ $('skillShield').addEventListener('click',()=>useSkill('shield'));$('skillInsigh
  $('retry').addEventListener('click',()=>start(state.stage));$('restart').addEventListener('click',()=>start(state.stage));
 for(const id of ['quit','home','overHome'])$(id).addEventListener('click',()=>{cancelPending();show('title')});
 $('sound').addEventListener('click',()=>{state.soundOn=!state.soundOn;$('sound').textContent=state.soundOn?'♪ おと ON':'♪ おと OFF';$('sound').setAttribute('aria-pressed',String(state.soundOn));sound('tap')});
-if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,STAGES,MONSTERS,createQuestion,start,choose,questionFor,options,resolveTurn,gameOver,stickerData,recordMonsterDefeated,renderStickers,useSkill,retryBoss,bossWins});
+if(typeof window.__QUEST_TEST_HOOK__==='function')window.__QUEST_TEST_HOOK__({state,STAGES,MONSTERS,createQuestion,start,choose,questionFor,options,resolveTurn,gameOver,stickerData,recordMonsterDefeated,renderStickers,useSkill,retryBoss,bossWins,renderQuestionAnswers,activeAnswer});
 })();
 </script></body></html>

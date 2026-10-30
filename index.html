@@ -153,6 +153,13 @@
  #gameScreen .scene{height:211px}
  #gameScreen .scene .bubble{font-size:10px;padding:5px 8px}
 }
+/* v0.6.1: Cherry clarity. Always show the original equation; highlight the number
+   being split and put each intermediate equation inside the step card. */
+.math-q.cherry-original{margin-bottom:4px}
+.math-q .cherry-source-number{display:inline-block;vertical-align:baseline;background:#ffebc2;border:2px solid #edbb68;border-radius:10px;padding:0 .13em;line-height:1.16;color:#88532e}
+.cherry-practice-prompt{font-size:24px;line-height:1.35;color:#2d554e;text-align:center;font-weight:950;margin:1px auto 8px;white-space:nowrap}
+.cherry-step-note{font-size:11px;text-align:center;color:#827153;font-weight:800;line-height:1.45;margin-top:-3px;margin-bottom:5px}
+@media(max-width:350px){.cherry-practice-prompt{font-size:21px}.cherry-step-note{font-size:10px}}
 /* v0.6: interactive cherry course. Diagrams are code/CSS, not imported artwork. */
 .cherry-practice{margin:-2px 0 13px;padding:10px 11px 9px;border:2px solid #f1ddbd;border-radius:15px;background:linear-gradient(125deg,#fff8f0,#f5fbf1)}
 .cherry-practice-head{font-size:12px;font-weight:950;color:#a66c4b;text-align:center;margin-bottom:4px}
@@ -204,7 +211,9 @@
   <div class="math-head"><span class="math-kind" id="mathKind">⚔️ こうげき</span><span class="math-mini" id="mathMini">せいかいで 3 ダメージ</span></div>
   <div class="math-q" id="mathQuestion" aria-live="polite">5 ＋ 3 ＝ ？</div><p class="math-sub" id="mathSub">けいさんして こうげきしよう！</p>
   <div class="cherry-practice" id="cherryPractice" hidden aria-label="さくらんぼけいさんの ず">
-   <div class="cherry-practice-head" id="cherryPracticeHead">🍒 10を つくろう</div>
+   <div class="cherry-practice-head" id="cherryPracticeHead">🍒 ① 10を つくろう</div>
+   <div class="cherry-practice-prompt" id="cherryStepPrompt" aria-live="polite">7 ＋ □ ＝ 10</div>
+   <div class="cherry-step-note" id="cherryStepNote">もとの しきの 8 を わけるよ</div>
    <div class="cherry-practice-body">
     <div class="cherry-numberbond"><span class="bond-stem" id="bondStem">5</span><svg aria-hidden="true" viewBox="0 0 130 40"><path d="M65 3 Q40 15 27 36 M65 3 Q89 15 104 36" fill="none" stroke="#97c1aa" stroke-width="3.5" stroke-linecap="round"/></svg><div class="bond-fruit"><span id="bondLeft">？</span><span id="bondRight">？</span></div></div>
     <div class="cherry-ten-box"><div class="cherry-ten-caption" id="cherryTenCaption">10の わく</div><div class="cherry-ten-grid" id="cherryTenGrid"></div><div class="cherry-remaining" id="cherryRemaining">まず 10を つくろう！</div></div>
@@ -230,7 +239,7 @@
 </main>
 <script>
 
-/* けいさんクエスト v0.6 - add interactive cherry-number-bond course while preserving existing boss/skills/stickers and UI fixes. */
+/* けいさんクエスト v0.6.1 - simplify cherry explanatory UI; no change to scoring/battles/stickers. */
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const STAGES=[
@@ -299,16 +308,23 @@ function renderCherryDiagram(){
  $('cherryPractice').hidden=false;
  const [a,b]=q.parts,filled=state.cherryStep>0;
  $('bondStem').textContent=b;$('bondLeft').textContent=filled?q.cherry.need:'？';$('bondRight').textContent=filled?q.cherry.rest:'？';
- $('cherryPracticeHead').textContent=filled?'🍒 '+b+' は '+q.cherry.need+' と '+q.cherry.rest:'🍒 '+b+'を わけて 10に しよう！';
- $('cherryTenCaption').textContent=filled?a+' ＋ '+q.cherry.need+' ＝ 10':'あと いくつで 10？';
+ $('cherryPracticeHead').textContent=filled?'🍒 ② のこりを たそう！':'🍒 ① 10を つくろう！';
+ $('cherryStepPrompt').textContent=filled?`10 ＋ ${q.cherry.rest} ＝ ？`:`${a} ＋ □ ＝ 10`;
+ $('cherryStepNote').textContent=filled?`${b} は ${q.cherry.need} と ${q.cherry.rest} に わかれたよ`:`もとの しきの ${b} から いくつ つかう？`;
+ $('cherryTenCaption').textContent=filled?`${a} ＋ ${q.cherry.need} ＝ 10`:'あと いくつで 10？';
  const frame=$('cherryTenGrid');frame.replaceChildren();
  for(let i=0;i<10;i++){const dot=document.createElement('span');dot.className='cherry-ten-dot'+(i<a?' filled':filled?' added':'');frame.append(dot)}
  $('cherryRemaining').textContent=filled?'のこり '+q.cherry.rest+'を たそう！':a+'こ あるよ';
 }
 function renderQuestionAnswers(){
  const q=state.question,first=q.cherry&&state.cherryStep===0;
- $('mathQuestion').textContent=q.cherry?(first?`${q.parts[0]} ＋ □ ＝ 10`:`10 ＋ ${q.cherry.rest} ＝ ？`):q.display;
- $('mathSub').textContent=q.cherry?(first?`${q.parts[0]} ＋ ${q.parts[1]}。 ${q.parts[1]}を ふたつに わけよう！`:'10に したら、のこりを たそう！'):
+ const original=$('mathQuestion');original.classList.toggle('cherry-original',!!q.cherry);
+ if(q.cherry){
+  const source=document.createElement('span');source.className='cherry-source-number';source.textContent=q.parts[1];
+  source.setAttribute('aria-label',q.parts[1]+'。この かずを わけるよ');
+  original.replaceChildren(document.createTextNode(q.parts[0]+' ＋ '),source,document.createTextNode(' ＝ ？'));
+ }else original.textContent=q.display;
+ $('mathSub').textContent=q.cherry?(first?'↑ これが もとの もんだい。いろの ついた かずを わけるよ！':'↑ もとの もんだいは おなじ。つぎは のこりを たそう！'):
   ({attack:'けいさんで モンスターを こうげき！',defend:'せいかいすると ダメージを へらせる！',potion:'せいかいすると HPが かいふく！',skillHeal:'せいかいすると HPが 5 かいふく！'})[state.turn];
  renderCherryDiagram();$('choices').replaceChildren();state.choices=options(activeAnswer());
  $('choices').hidden=state.inputMode;$('entryPanel').hidden=!state.inputMode;
@@ -436,10 +452,9 @@ function showHint(){
     addExtraDots(b,'mint',`${b}こ から つかうよ`);
     note='まず 10の わくを いっぱいに しよう！';
    }else{
-    drawCherry(b,q.cherry.need,q.cherry.rest,`${b}を ふたつに わけたよ`);
-    drawTenFrame(Array.from({length:10},(_,i)=>i<a?'gold':'mint'),`${a} ＋ ${q.cherry.need} ＝ 10`);
-    addExtraDots(q.cherry.rest,'gold','のこりを たしてね');
-    note='10に のこりの かずを たしてみよう！';
+    drawTenFrame(Array(10).fill('mint'),`10こに なったよ`);
+    addExtraDots(q.cherry.rest,'gold',`のこり ${q.cherry.rest}こを たしてね`);
+    note=`10こ と のこり ${q.cherry.rest}こ。ぜんぶで いくつ？`;
    }
   }else if(q.pattern===2){
   const sub=q.op==='--',sign=sub?'−':'＋',mid=sub?a-b:a+b;
